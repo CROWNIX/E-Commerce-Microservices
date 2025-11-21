@@ -1,0 +1,7 @@
+# abaikan semua file YAML
+*.yaml
+*.yml
+
+# atau abaikan file tertentu
+api.yaml
+openapi.yaml

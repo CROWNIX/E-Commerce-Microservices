@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  kong:
+    image: kong:3.6-alpine
+    container_name: kong-gateway
+    ports:
+      - "8000:8000"   # proxy traffic
+      - "8001:8001"   # admin API
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+    volumes:
+      - ./kong.yml:/etc/kong/kong.yml
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # penting untuk akses localhost

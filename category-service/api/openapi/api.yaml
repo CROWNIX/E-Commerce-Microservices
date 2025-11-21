@@ -1,0 +1,779 @@
+openapi: 3.0.1
+info:
+  title: E-Commerce-API API
+  version: 1.0.0
+  description: |-
+    - whatever it is in the form of an rfc3339 time response from be, using timezone utc. unless there is a specific field noted. but by default UTC
+    - Note: When integrating with API, please read the field descriptions (request body, query params, query path, response body) on each endpoint
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  '/v1/users/{userID}/products/{cartID}':
+    delete:
+      operationId: ApiV1DeleteCart
+      summary: Delete product in cart
+      parameters:
+        - name: userID
+          in: path
+          description: Id User
+          required: true
+          schema:
+            type: integer
+            format: uint64
+            example: 1
+        - name: cartID
+          in: path
+          description: Id Product
+          required: true
+          schema:
+            type: integer
+            format: uint64
+            example: 1
+      responses:
+        '200':
+          description: Delete product in cart successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiV1DeleteCartResponseBody'
+        '204':
+          description: 'no content, berhasil dikirim'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '408':
+          $ref: '#/components/responses/Timeout'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Cart
+  /v1/cart:
+    post:
+      operationId: ApiV1PostCart
+      summary: Add product to cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiV1PostCartRequestBody'
+      responses:
+        '200':
+          description: Add product to cart successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiV1PostCartResponseBody'
+        '204':
+          description: 'no content, berhasil dikirim'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '408':
+          $ref: '#/components/responses/Timeout'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Cart
+  /v1/register:
+    post:
+      operationId: ApiV1PostRegister
+      summary: Register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiV1PostRegisterRequestBody'
+      responses:
+        '200':
+          description: Register successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiV1PostRegisterResponseBody'
+        '204':
+          description: 'no content, berhasil dikirim'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '408':
+          $ref: '#/components/responses/Timeout'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Auth
+  /v1/login:
+    post:
+      operationId: ApiV1PostLogin
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiV1PostLoginRequestBody'
+      responses:
+        '200':
+          description: Register successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiV1PostLoginResponseBody'
+        '204':
+          description: 'no content, berhasil dikirim'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '408':
+          $ref: '#/components/responses/Timeout'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Auth
+  /v1/categories:
+    get:
+      operationId: ApiV1GetCategories
+      summary: Get Category Product
+      parameters:
+        - $ref: '#/components/parameters/sort_field'
+        - $ref: '#/components/parameters/sort_direction'
+      responses:
+        '200':
+          description: Response Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiV1GetCategoriesResponseBody'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '408':
+          $ref: '#/components/responses/Timeout'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Category
+  '/v1/categories/{categoryID}':
+    get:
+      operationId: ApiV1GetParentCategory
+      summary: Get Parent Category
+      parameters:
+        - name: categoryID
+          in: path
+          description: Id Category
+          required: true
+          schema:
+            type: integer
+            format: uint64
+            example: 1
+      responses:
+        '200':
+          description: Response Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiV1GetParentCategoryResponseBody'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '408':
+          $ref: '#/components/responses/Timeout'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Category
+  /v1/products:
+    get:
+      operationId: ApiV1GetProducts
+      summary: Get Products
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/page_size'
+        - $ref: '#/components/parameters/sort_field'
+        - $ref: '#/components/parameters/sort_direction'
+        - name: category_id
+          in: query
+          description: Id Category
+          required: false
+          schema:
+            type: integer
+            format: uint64
+            example: 1
+      responses:
+        '200':
+          description: Response Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiV1GetProductsResponseBody'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '408':
+          $ref: '#/components/responses/Timeout'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Product
+  '/v1/products/{productID}':
+    get:
+      operationId: ApiV1GetDetailProduct
+      summary: Get Detail Product
+      parameters:
+        - name: productID
+          in: path
+          description: Id Product
+          required: true
+          schema:
+            type: integer
+            format: uint64
+            example: 1
+      responses:
+        '200':
+          description: Response Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiV1GetDetailProductResponseBody'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '408':
+          $ref: '#/components/responses/Timeout'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Category
+components:
+  schemas:
+    ApiV1DeleteCartResponseBody:
+      type: object
+      properties:
+        message:
+          description: Response Successfully
+          type: string
+          example: Delete product in cart Successfully
+      required:
+        - message
+    ApiV1PostCartResponseBody:
+      type: object
+      properties:
+        message:
+          description: Response Successfully
+          type: string
+          example: Add product to cart Successfully
+      required:
+        - message
+    ApiV1PostCartRequestBody:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          format: uint64
+          example: 1
+        product_id:
+          type: integer
+          format: uint64
+          example: 1
+        quantity:
+          type: integer
+          format: uint8
+          example: 1
+      required:
+        - user_id
+        - product_id
+        - quantity
+    ApiV1PostRegisterRequestBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: example@gmail.com
+          x-oapi-codegen-extra-tags:
+            validate: 'required,email,max=64'
+        password:
+          type: string
+          example: password
+          x-oapi-codegen-extra-tags:
+            validate: 'required,password'
+        password_confirmation:
+          type: string
+          example: Kebersihan
+          x-oapi-codegen-extra-tags:
+            validate: 'required,eqfield=Password'
+      required:
+        - email
+        - password
+        - password_confirmation
+    ApiV1PostRegisterResponseBody:
+      type: object
+      properties:
+        message:
+          description: Response Successfully
+          type: string
+          example: Register Successfully
+      required:
+        - message
+    ApiV1PostLoginRequestBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: example@gmail.com
+          x-oapi-codegen-extra-tags:
+            validate: 'required,email'
+        password:
+          type: string
+          example: password
+          x-oapi-codegen-extra-tags:
+            validate: required
+      required:
+        - email
+        - password
+    ApiV1PostLoginResponseBody:
+      type: object
+      properties:
+        message:
+          description: Response Successfully
+          type: string
+          example: Login Successfully
+        access_token:
+          type: string
+          example: eyljsijfeisjifsa
+      required:
+        - message
+        - access_token
+    ApiV1GetCategoriesResponseBody:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiV1GetCategory'
+        message:
+          description: Response Successfully
+          type: string
+          example: Get Categories Successfully
+      required:
+        - items
+        - message
+    ApiV1GetParentCategoryResponseBody:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        name:
+          type: string
+          example: Elektronik
+          maxLength: 32
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiV1GetCategoryChildren'
+        message:
+          description: Response Successfully
+          type: string
+          example: Get Parent Category Successfully
+      required:
+        - id
+        - name
+        - children
+        - message
+    ApiV1GetCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        name:
+          type: string
+          example: Elektronik
+          maxLength: 32
+        image:
+          type: string
+        parent_id:
+          type: integer
+          format: uint64
+          example: 1
+      required:
+        - id
+        - name
+    ApiV1GetCategoryChildren:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        name:
+          type: string
+          example: Elektronik
+          maxLength: 32
+      required:
+        - id
+        - name
+    ApiV1GetProductsResponseBody:
+      type: object
+      properties:
+        message:
+          description: Response Successfully
+          type: string
+          example: Response Successfully
+        metadata:
+          $ref: '#/components/schemas/MetaDataOnlyPagination'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiV1GetProduct'
+      required:
+        - metadata
+        - message
+        - items
+    ApiV1GetProduct:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        name:
+          type: string
+          example: Product 1
+        images:
+          type: array
+          items:
+            type: string
+        price:
+          type: integer
+          format: uint64
+          example: 100000
+        final_price:
+          type: integer
+          format: uint64
+          example: 100000
+      required:
+        - id
+        - name
+        - images
+        - price
+        - final_price
+    ApiV1GetDetailProductResponseBody:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        name:
+          type: string
+          example: Product 1
+        images:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+          example: Description Product
+        price:
+          type: integer
+          format: uint64
+          example: 100000
+        stock:
+          type: integer
+          format: uint32
+          example: 1000
+        final_price:
+          type: integer
+          format: uint64
+          example: 100000
+        discount_percent:
+          type: integer
+          format: uint8
+          example: 10
+        minimum_purchase:
+          type: integer
+          format: uint8
+          example: 1
+        maximum_purchase:
+          type: integer
+          format: uint8
+          example: 3
+        message:
+          description: Response Successfully
+          type: string
+          example: Response Successfully
+      required:
+        - id
+        - name
+        - images
+        - description
+        - price
+        - stock
+        - final_price
+        - discount_percent
+        - minimum_purchase
+        - message
+    ApiV1GetDetailProduct:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        name:
+          type: string
+          example: Product 1
+        images:
+          type: array
+          items:
+            type: string
+        price:
+          type: integer
+          format: uint64
+          example: 100000
+        final_price:
+          type: integer
+          format: uint64
+          example: 100000
+      required:
+        - id
+        - name
+        - images
+        - price
+        - final_price
+    MetaDataOnlyPagination:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+        - pagination
+    ErrorValidate:
+      type: object
+      properties:
+        field:
+          type: string
+          example: email
+        message:
+          type: array
+          items:
+            type: string
+          example:
+            - Email is invalid
+            - Email is required
+      required:
+        - field
+        - message
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        expires_in:
+          type: integer
+          format: int32
+          example: 3600
+        expired_at:
+          description: |
+            - format: RFC3339
+            - timezone: UTC
+          type: string
+          format: date-time
+          example: '2023-10-01T12:00:00Z'
+        token_type:
+          type: string
+          example: Bearer
+      required:
+        - token
+        - expires_in
+        - token_type
+        - expired_at
+    GeneralErrorResponse:
+      type: object
+      properties:
+        data:
+          description: 'Data is null if there is no data, must be null if there is an error'
+          type: object
+          nullable: true
+        metadata:
+          description: 'Metadata is null if there is no metadata, must be null if there is an error'
+          type: object
+          nullable: true
+        message:
+          description: Error message
+          type: string
+          example: Validation failed
+        error_validations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorValidate'
+          example:
+            - field: email
+              message:
+                - Email is invalid
+          nullable: false
+      required:
+        - message
+    MetaData:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      required:
+        - pagination
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int64
+          example: 100
+        page:
+          type: integer
+          format: int64
+          example: 1
+        page_size:
+          type: integer
+          format: int64
+          example: 10
+        total_page:
+          type: integer
+          format: int64
+          example: 10
+      required:
+        - total
+        - page
+        - page_size
+        - total_page
+  parameters:
+    page:
+      name: page
+      in: query
+      description: Page number for pagination
+      required: true
+      schema:
+        type: integer
+        format: int64
+        example: 1
+    page_size:
+      name: page_size
+      in: query
+      description: Number of items per page for pagination
+      required: true
+      schema:
+        type: integer
+        format: int64
+        example: 10
+    search:
+      name: search
+      in: query
+      description: Search term for filtering results
+      required: false
+      schema:
+        type: string
+        example: role_name
+    sort_direction:
+      name: sort_direction
+      in: query
+      description: Sort direction for the results
+      required: true
+      schema:
+        type: string
+        example: asc
+        enum:
+          - asc
+          - desc
+    sort_field:
+      name: sort_field
+      in: query
+      description: Field to sort the results by
+      required: true
+      schema:
+        type: string
+        example: name
+        enum:
+          - name
+          - id
+  responses:
+    Timeout:
+      description: Timeout error
+      content:
+        application/json:
+          schema:
+            properties:
+              message:
+                description: Error message
+                type: string
+                example: Validation failed
+            required:
+              - message
+    ResponseIDNumber:
+      description: Response with ID
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+                example: 1
+            required:
+              - id
+    UnauthorizedError:
+      description: Unauthorized access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GeneralErrorResponse'
+    ForbiddenError:
+      description: Forbidden access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GeneralErrorResponse'
+    ValidationError:
+      description: Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GeneralErrorResponse'
+    BadRequest:
+      description: Validation failed
+      content:
+        application/json:
+          schema:
+            properties:
+              message:
+                description: Error message
+                type: string
+                example: Validation failed
+              error_validations:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorValidate'
+                example:
+                  - field: email
+                    message:
+                      - Email is invalid
+                nullable: false
+            required:
+              - message
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GeneralErrorResponse'
+  securitySchemes:
+    AuthHeader:
+      type: apiKey
+      in: header
+      name: Authorization
