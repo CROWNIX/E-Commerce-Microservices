@@ -3,7 +3,6 @@ package presentations
 import (
 	"cart-service/internal/config"
 	"cart-service/internal/presentations/handler"
-	"cart-service/internal/presentations/middleware"
 	"cart-service/internal/services"
 	"context"
 	"fmt"
@@ -18,7 +17,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewPresentation(service *services.Service, mw *middleware.Middleware, cleanUp func()) {
+func NewPresentation(service *services.Service, cleanUp func()) {
 	gin.SetMode(config.GetConfig().GinMode)
 
 	r := ginx.NewGin(ginx.GinConfig{
@@ -28,7 +27,6 @@ func NewPresentation(service *services.Service, mw *middleware.Middleware, clean
 
 	h := handler.NewHandler(handler.Options{
 		Service:    service,
-		Middleware: mw,
 	})
 
 	h.RegisterRoutes(r)

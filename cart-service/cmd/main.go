@@ -3,7 +3,7 @@ package main
 import (
 	"cart-service/internal/config"
 	"cart-service/internal/infra"
-	// "cart-service/internal/presentations"
+	"cart-service/internal/presentations"
 	"log/slog"
 
 	"github.com/CROWNIX/go-utils/validatorx"
@@ -27,12 +27,12 @@ var restApiCmd = &cobra.Command{
 
 		infra.NewLog()
 
-		// serv, mw, cleanUp, err := LoadServices()
-		// if err != nil {
-		// 	panic(err)
-		// }
+		serv, cleanUp, err := LoadServices()
+		if err != nil {
+			panic(err)
+		}
 
-		// presentations.NewPresentation(serv, mw, cleanUp)
+		presentations.NewPresentation(serv, cleanUp)
 	},
 }
 

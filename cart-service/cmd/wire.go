@@ -7,35 +7,28 @@
 package main
 
 import (
-	"cart-service/internal/config"
 	"cart-service/internal/infra"
-	"cart-service/internal/presentations/middleware"
 	"cart-service/internal/repositories/datastore/carts"
 	"cart-service/internal/repositories/datastore/products"
 	"cart-service/internal/services"
 	"cart-service/internal/services/cart"
-	"cart-service/internal/utils"
 
 	"github.com/google/wire"
 )
 
-func LoadServices() (*services.Service, *middleware.Middleware, func(), error) {
+func LoadServices() (*services.Service, func(), error) {
 	wire.Build(
 		infra.NewMysql,
-		carts.NewCartRepository,
-		products.NewProductRepository,
 		infra.ProvideTx,
-		wire.Struct(new(cart.OptionParams),
-			"CartRepositoryReader",
-			"CartRepositoryWriter",
-			"ProductRepositoryReader",
-			"Tx",
-		),
-		cart.New,
+
+		// REPOSITORY DATASTORE LAYER
+		carts.SetWire,
+		products.SetWire,
+
+		// SERVICE LAYER
+		cart.SetWire,
+
 		services.NewService,
-		config.NewRedisClient,
-		utils.NewTokenUtil,
-		middleware.NewMiddleware,
 	)
-	return nil, nil, nil, nil
+	return nil, nil, nil
 }

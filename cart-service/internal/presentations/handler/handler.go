@@ -3,7 +3,6 @@ package handler
 import (
 	"cart-service/generated/api"
 	"cart-service/internal/presentations/handler/cms"
-	"cart-service/internal/presentations/middleware"
 	"cart-service/internal/services"
 
 	"github.com/CROWNIX/go-utils/utils/primitive"
@@ -12,19 +11,16 @@ import (
 
 type Handler struct {
 	Service   *services.Service
-	Middlware *middleware.Middleware
 	*cms.CmsHandler
 }
 
 type Options struct {
 	Service    *services.Service
-	Middleware *middleware.Middleware
 }
 
 func NewHandler(opts Options) *Handler {
 	return &Handler{
 		Service:   opts.Service,
-		Middlware: opts.Middleware,
 		CmsHandler: cms.NewHandler(cms.Options{
 			Service: opts.Service,
 		}),
@@ -42,6 +38,6 @@ func bindToPaginationResponse(input primitive.PaginationOutput) api.Pagination {
 
 func (h *Handler) RegisterRoutes(r *gin.Engine) {
 	v1 := r.Group("/v1")
-	v1.POST("/carts", h.Middlware.AuthMiddleware, h.ApiV1PostCart)
-	v1.DELETE("/users/:userID/carts/:cartID", h.Middlware.AuthMiddleware, h.ApiV1PostCart)
+	v1.POST("/carts", h.ApiV1PostCart)
+	v1.DELETE("/users/:userID/carts/:cartID", h.ApiV1PostCart)
 }
