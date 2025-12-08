@@ -19,7 +19,7 @@ type Options struct {
 }
 
 func NewHandler(opts Options) *Handler {
-	return &Handler{
+	return &Handler{	
 		Service:   opts.Service,
 		CmsHandler: cms.NewHandler(cms.Options{
 			Service: opts.Service,
