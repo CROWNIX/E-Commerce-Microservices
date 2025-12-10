@@ -29,12 +29,11 @@ func (r *cartRepository) CreateCart(ctx context.Context, input CreateCartInput) 
 	return nil
 }
 
-func (r *cartRepository) DeleteCart(ctx context.Context, userID uint64, productID uint64) (err error) {
+func (r *cartRepository) DeleteCart(ctx context.Context, cartID uint64) (err error) {
 	query := r.DB.Sq.
 		Delete(models.CartTableName).
 		Where(squirrel.Eq{
-			models.CartField.UserID: userID,
-			models.CartField.ProductID: productID,
+			models.CartField.ID: cartID,
 		})
 
 	_, err = r.DB.RDBMS.ExecSq(ctx, query, true)

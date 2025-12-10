@@ -12,23 +12,19 @@ import (
 )
 
 func (h *Handler) ApiV1DeleteCart(c *gin.Context) {
-	var userID uint64
+	var cartID uint64
 
-	err := runtime.BindStyledParameterWithOptions("simple", "userID", c.Param("userID"), &userID, runtime.BindStyledParameterOptions{Explode: false, Required: true})
+	err := runtime.BindStyledParameterWithOptions("simple", "cartID", c.Param("cartID"), &cartID, runtime.BindStyledParameterOptions{Explode: false, Required: true})
 
 	if err != nil {
-		ginx.ErrorResponse(c, apperror.BadRequest(fmt.Sprintf("invalid format for parameter userID: %w", err)))
+		ginx.ErrorResponse(c, apperror.BadRequest(fmt.Sprintf("invalid format for parameter cartID: %w", err)))
 
 		return
 	}
 
-	var productID uint64
-
-	err = runtime.BindStyledParameterWithOptions("simple", "productID", c.Param("productID"), &productID, runtime.BindStyledParameterOptions{Explode: false, Required: true})
-
-	if err != nil {
-		ginx.ErrorResponse(c, apperror.BadRequest(fmt.Sprintf("invalid format for parameter productID: %w", err)))
-
+	err = h.Service.CartService.DeleteCart(c.Request.Context(), cartID)
+	if err != nil{
+		ginx.ErrorResponse(c, err)
 		return
 	}
 

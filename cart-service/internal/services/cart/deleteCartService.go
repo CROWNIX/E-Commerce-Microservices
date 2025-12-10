@@ -6,8 +6,8 @@ import (
 	"github.com/CROWNIX/go-utils/apperror"
 )
 
-func (c *cartService) DeleteCart(ctx context.Context, userID uint64, productID uint64) (err error) {
-	total, err := c.cartRepositoryReader.CountCartByUserAndProductId(ctx, userID, productID)
+func (c *cartService) DeleteCart(ctx context.Context, cartID uint64) (err error) {
+	total, err := c.cartRepositoryReader.CountCartByCartId(ctx, cartID)
 	if err != nil {
 		return err
 	}
@@ -16,7 +16,7 @@ func (c *cartService) DeleteCart(ctx context.Context, userID uint64, productID u
 		return apperror.NotFound("Cart not found")
 	}
 
-	err = c.cartRepositoryWriter.DeleteCart(ctx, userID, productID)
+	err = c.cartRepositoryWriter.DeleteCart(ctx, cartID)
 	if err != nil {
 		return err
 	}
