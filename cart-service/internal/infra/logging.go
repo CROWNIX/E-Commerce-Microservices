@@ -10,7 +10,7 @@ import (
 func NewLog() {
 	observability.NewLog(observability.LogConfig{
 		Mode:          "json",
-		Level:         "info",
+		Level:         "debug",
 		Env:           config.GetConfig().AppEnv,
 		ServiceName:   config.GetConfig().AppName,
 		ZerologStdOut: config.GetConfig().AppEnv == "development",

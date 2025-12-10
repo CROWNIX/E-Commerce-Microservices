@@ -32,11 +32,6 @@ func (h *Handler) ApiV1DeleteCart(c *gin.Context) {
 		return
 	}
 
-	if err != nil {
-		ginx.ErrorResponse(c, err)
-		return
-	}
-
 	resp := api.ApiV1DeleteCartResponseBody{
 		Message: "Delete product in cart Successfully",
 	}

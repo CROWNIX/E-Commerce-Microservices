@@ -32,13 +32,14 @@ func (h *Handler) ApiV1PatchIncrementCart(c *gin.Context) {
 		return
 	}
 
+	err = h.Service.CartService.IncrementCart(c.Request.Context(), userID, productID)
 	if err != nil {
 		ginx.ErrorResponse(c, err)
 		return
 	}
 
-	resp := api.ApiV1DeleteCartResponseBody{
-		Message: "Delete product in cart Successfully",
+	resp := api.ApiV1PatchIncrementCartResponseBody{
+		Message: "Increment cart Successfully",
 	}
 
 	c.JSON(http.StatusOK, resp)

@@ -159,7 +159,7 @@ components:
     ApiV1PatchIncrementCartResponseBody:
       type: object
       properties:
-        Message:
+        message:
           description: Response Successfully
           type: string
           example: Increment product in cart Successfully
