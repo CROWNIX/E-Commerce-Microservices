@@ -48,6 +48,46 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
         - Cart
+  '/v1/users/{userID}/carts/{productID}/decrement':
+    delete:
+      operationId: ApiV1PatchDecrementCart
+      summary: Decrement total product in cart
+      parameters:
+        - name: userID
+          in: path
+          description: Id User
+          required: true
+          schema:
+            type: integer
+            format: uint64
+            example: 1
+        - name: productID
+          in: path
+          description: Id Product
+          required: true
+          schema:
+            type: integer
+            format: uint64
+            example: 1
+      responses:
+        '200':
+          description: Decrement Product In Cart Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiV1PatchDecrementCartResponseBody'
+        '204':
+          description: 'no content, berhasil dikirim'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '408':
+          $ref: '#/components/responses/Timeout'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Cart
   '/v1/users/{userID}/products/{productID}':
     delete:
       operationId: ApiV1DeleteCart
@@ -163,6 +203,15 @@ components:
           description: Response Successfully
           type: string
           example: Increment product in cart Successfully
+      required:
+        - message
+    ApiV1PatchDecrementCartResponseBody:
+      type: object
+      properties:
+        message:
+          description: Response Successfully
+          type: string
+          example: Decrement product in cart Successfully
       required:
         - message
     MetaDataOnlyPagination:

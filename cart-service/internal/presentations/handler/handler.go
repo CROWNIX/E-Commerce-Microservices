@@ -40,5 +40,6 @@ func (h *Handler) RegisterRoutes(r *gin.Engine) {
 	v1 := r.Group("/v1")
 	v1.POST("/carts", h.ApiV1PostCart)
 	v1.PATCH("/users/:userID/carts/:productID/increment", h.ApiV1PatchIncrementCart)
+	v1.PATCH("/users/:userID/carts/:productID/decrement", h.ApiV1PatchDecrementCart)
 	v1.DELETE("/users/:userID/carts/:productID", h.ApiV1PostCart)
 }
