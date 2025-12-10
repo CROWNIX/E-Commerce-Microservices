@@ -74,38 +74,6 @@ paths:
         - Product
 components:
   schemas:
-    ApiV1GetCategory:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: uint64
-        name:
-          type: string
-          example: Elektronik
-          maxLength: 32
-        image:
-          type: string
-        parent_id:
-          type: integer
-          format: uint64
-          example: 1
-      required:
-        - id
-        - name
-    ApiV1GetCategoryChildren:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: uint64
-        name:
-          type: string
-          example: Elektronik
-          maxLength: 32
-      required:
-        - id
-        - name
     ApiV1GetProductsResponseBody:
       type: object
       properties:

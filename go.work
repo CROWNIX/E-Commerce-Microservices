@@ -1,7 +1,0 @@
-go 1.25.4
-
-use ./auth-service
-use ./api-gateway
-use ./product-service
-use ./category-service
-use ./cart-service

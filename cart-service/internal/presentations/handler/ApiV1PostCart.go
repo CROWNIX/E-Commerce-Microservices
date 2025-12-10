@@ -24,7 +24,7 @@ func (h *Handler) ApiV1PostCart(c *gin.Context) {
 		return
 	}
 
-	resp := api.ApiV1PostRegisterResponseBody{
+	resp := api.ApiV1PostCartResponseBody{
 		Message: "Add product to cart Successfully",
 	}
 

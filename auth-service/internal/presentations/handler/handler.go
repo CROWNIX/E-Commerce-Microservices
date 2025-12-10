@@ -1,12 +1,12 @@
 package handler
 
 import (
-	"auth-service/generated/api"
+	// "auth-service/generated/api"
 	"auth-service/internal/presentations/handler/cms"
 	"auth-service/internal/presentations/middleware"
 	"auth-service/internal/services"
 
-	"github.com/CROWNIX/go-utils/utils/primitive"
+	// "github.com/CROWNIX/go-utils/utils/primitive"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,14 +31,14 @@ func NewHandler(opts Options) *Handler {
 	}
 }
 
-func bindToPaginationResponse(input primitive.PaginationOutput) api.Pagination {
-	return api.Pagination{
-		Page:      input.Page,
-		PageSize:  input.PageSize,
-		Total:     input.TotalData,
-		TotalPage: input.PageCount,
-	}
-}
+// func bindToPaginationResponse(input primitive.PaginationOutput) api.Pagination {
+// 	return api.Pagination{
+// 		Page:      input.Page,
+// 		PageSize:  input.PageSize,
+// 		Total:     input.TotalData,
+// 		TotalPage: input.PageCount,
+// 	}
+// }
 
 func (h *Handler) RegisterRoutes(r *gin.Engine) {
 	v1 := r.Group("/v1")
