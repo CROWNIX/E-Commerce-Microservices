@@ -44,4 +44,6 @@ func (h *Handler) RegisterRoutes(r *gin.Engine) {
 	v1 := r.Group("/v1")
 	v1.GET("/products", h.ApiV1GetProducts)
 	v1.GET("/products/:productID", h.ApiV1GetDetailProduct)
+	v1.GET("/categories", h.ApiV1GetCategories)
+	v1.GET("/categories/:categoryID", h.ApiV1GetParentCategory)
 }

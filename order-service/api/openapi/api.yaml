@@ -8,45 +8,19 @@ info:
 servers:
   - url: 'http://localhost:8080'
 paths:
-  /v1/products:
-    get:
-      operationId: ApiV1GetProducts
-      summary: Get Products
+  '/v1/users/{userID}/carts/{productID}/increment':
+    delete:
+      operationId: ApiV1PatchIncrementCart
+      summary: Increment total product in cart
       parameters:
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/page_size'
-        - $ref: '#/components/parameters/sort_field'
-        - $ref: '#/components/parameters/sort_direction'
-        - name: category_id
-          in: query
-          description: Id Category
-          required: false
+        - name: userID
+          in: path
+          description: Id User
+          required: true
           schema:
             type: integer
             format: uint64
             example: 1
-      responses:
-        '200':
-          description: Response Successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiV1GetProductsResponseBody'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-        '408':
-          $ref: '#/components/responses/Timeout'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-      tags:
-        - Product
-  '/v1/products/{productID}':
-    get:
-      operationId: ApiV1GetDetailProduct
-      summary: Get Detail Product
-      parameters:
         - name: productID
           in: path
           description: Id Product
@@ -57,11 +31,13 @@ paths:
             example: 1
       responses:
         '200':
-          description: Response Successfully
+          description: Increment Product In Cart Successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiV1GetDetailProductResponseBody'
+                $ref: '#/components/schemas/ApiV1PatchIncrementCartResponseBody'
+        '204':
+          description: 'no content, berhasil dikirim'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -71,39 +47,23 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
       tags:
-        - Product
-  /v1/categories:
-    get:
-      operationId: ApiV1GetCategories
-      summary: Get Category Product
+        - Cart
+  '/v1/users/{userID}/carts/{productID}/decrement':
+    delete:
+      operationId: ApiV1PatchDecrementCart
+      summary: Decrement total product in cart
       parameters:
-        - $ref: '#/components/parameters/sort_field'
-        - $ref: '#/components/parameters/sort_direction'
-      responses:
-        '200':
-          description: Response Successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiV1GetCategoriesResponseBody'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-        '408':
-          $ref: '#/components/responses/Timeout'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-      tags:
-        - Category
-  '/v1/categories/{categoryID}':
-    get:
-      operationId: ApiV1GetParentCategory
-      summary: Get Parent Category
-      parameters:
-        - name: categoryID
+        - name: userID
           in: path
-          description: Id Category
+          description: Id User
+          required: true
+          schema:
+            type: integer
+            format: uint64
+            example: 1
+        - name: productID
+          in: path
+          description: Id Product
           required: true
           schema:
             type: integer
@@ -111,11 +71,13 @@ paths:
             example: 1
       responses:
         '200':
-          description: Response Successfully
+          description: Decrement Product In Cart Successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiV1GetParentCategoryResponseBody'
+                $ref: '#/components/schemas/ApiV1PatchDecrementCartResponseBody'
+        '204':
+          description: 'no content, berhasil dikirim'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -125,204 +87,133 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
       tags:
-        - Category
+        - Cart
+  '/v1/users/{userID}/products/{productID}':
+    delete:
+      operationId: ApiV1DeleteCart
+      summary: Delete product in cart
+      parameters:
+        - name: userID
+          in: path
+          description: Id User
+          required: true
+          schema:
+            type: integer
+            format: uint64
+            example: 1
+        - name: productID
+          in: path
+          description: Id Product
+          required: true
+          schema:
+            type: integer
+            format: uint64
+            example: 1
+      responses:
+        '200':
+          description: Delete product in cart successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiV1DeleteCartResponseBody'
+        '204':
+          description: 'no content, berhasil dikirim'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '408':
+          $ref: '#/components/responses/Timeout'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Cart
+  /v1/cart:
+    post:
+      operationId: ApiV1PostCart
+      summary: Add product to cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiV1PostCartRequestBody'
+      responses:
+        '200':
+          description: Add product to cart successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiV1PostCartResponseBody'
+        '204':
+          description: 'no content, berhasil dikirim'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '408':
+          $ref: '#/components/responses/Timeout'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Cart
 components:
   schemas:
-    ApiV1GetProductsResponseBody:
+    ApiV1DeleteCartResponseBody:
       type: object
       properties:
         message:
           description: Response Successfully
           type: string
-          example: Response Successfully
-        metadata:
-          $ref: '#/components/schemas/MetaDataOnlyPagination'
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApiV1GetProduct'
+          example: Delete product in cart Successfully
       required:
-        - metadata
         - message
-        - items
-    ApiV1GetProduct:
+    ApiV1PostCartResponseBody:
       type: object
       properties:
-        id:
-          type: integer
-          format: uint64
-        name:
-          type: string
-          example: Product 1
-        images:
-          type: array
-          items:
-            type: string
-        price:
-          type: integer
-          format: uint64
-          example: 100000
-        final_price:
-          type: integer
-          format: uint64
-          example: 100000
-      required:
-        - id
-        - name
-        - images
-        - price
-        - final_price
-    ApiV1GetDetailProductResponseBody:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: uint64
-        name:
-          type: string
-          example: Product 1
-        images:
-          type: array
-          items:
-            type: string
-        description:
-          type: string
-          example: Description Product
-        price:
-          type: integer
-          format: uint64
-          example: 100000
-        stock:
-          type: integer
-          format: uint32
-          example: 1000
-        final_price:
-          type: integer
-          format: uint64
-          example: 100000
-        discount_percent:
-          type: integer
-          format: uint8
-          example: 10
-        minimum_purchase:
-          type: integer
-          format: uint8
-          example: 1
-        maximum_purchase:
-          type: integer
-          format: uint8
-          example: 3
         message:
           description: Response Successfully
           type: string
-          example: Response Successfully
+          example: Add product to cart Successfully
       required:
-        - id
-        - name
-        - images
-        - description
-        - price
-        - stock
-        - final_price
-        - discount_percent
-        - minimum_purchase
         - message
-    ApiV1GetDetailProduct:
+    ApiV1PostCartRequestBody:
       type: object
       properties:
-        id:
-          type: integer
-          format: uint64
-        name:
-          type: string
-          example: Product 1
-        images:
-          type: array
-          items:
-            type: string
-        price:
-          type: integer
-          format: uint64
-          example: 100000
-        final_price:
-          type: integer
-          format: uint64
-          example: 100000
-      required:
-        - id
-        - name
-        - images
-        - price
-        - final_price
-    ApiV1GetCategoriesResponseBody:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApiV1GetCategory'
-        message:
-          description: Response Successfully
-          type: string
-          example: Get Categories Successfully
-      required:
-        - items
-        - message
-    ApiV1GetParentCategoryResponseBody:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: uint64
-        name:
-          type: string
-          example: Elektronik
-          maxLength: 32
-        children:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApiV1GetCategoryChildren'
-        message:
-          description: Response Successfully
-          type: string
-          example: Get Parent Category Successfully
-      required:
-        - id
-        - name
-        - children
-        - message
-    ApiV1GetCategory:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: uint64
-        name:
-          type: string
-          example: Elektronik
-          maxLength: 32
-        image:
-          type: string
-        parent_id:
+        user_id:
           type: integer
           format: uint64
           example: 1
-      required:
-        - id
-        - name
-    ApiV1GetCategoryChildren:
-      type: object
-      properties:
-        id:
+        product_id:
           type: integer
           format: uint64
-        name:
-          type: string
-          example: Elektronik
-          maxLength: 32
+          example: 1
+        quantity:
+          type: integer
+          format: uint8
+          example: 1
       required:
-        - id
-        - name
+        - user_id
+        - product_id
+        - quantity
+    ApiV1PatchIncrementCartResponseBody:
+      type: object
+      properties:
+        message:
+          description: Response Successfully
+          type: string
+          example: Increment product in cart Successfully
+      required:
+        - message
+    ApiV1PatchDecrementCartResponseBody:
+      type: object
+      properties:
+        message:
+          description: Response Successfully
+          type: string
+          example: Decrement product in cart Successfully
+      required:
+        - message
     MetaDataOnlyPagination:
       type: object
       properties:

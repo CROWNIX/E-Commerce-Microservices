@@ -7,8 +7,10 @@ import (
 	"product-service/internal/infra"
 
 	"product-service/internal/repositories/datastore/products"
+	"product-service/internal/repositories/datastore/categories"
 	"product-service/internal/services"
 	"product-service/internal/services/product"
+	"product-service/internal/services/category"
 
 	"github.com/google/wire"
 )
@@ -21,9 +23,11 @@ func LoadServices() (*services.Service, func()) {
 
 		// REPOSITORY DATASTORE LAYER
 		products.SetWire,
+		categories.SetWire,
 
 		// SERVICE LAYER
 		product.SetWire,
+		category.SetWire,
 
 		services.NewService,
 	)
