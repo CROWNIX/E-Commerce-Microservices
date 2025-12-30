@@ -1,8 +1,8 @@
 package cart
 
 import (
+	"cart-service/internal/repositories/grpc/product"
 	"cart-service/internal/repositories/datastore/carts"
-	"cart-service/internal/repositories/datastore/products"
 
 	"github.com/CROWNIX/go-utils/databases/sqlx"
 	"github.com/google/wire"
@@ -11,14 +11,14 @@ import (
 type cartService struct {
 	cartRepositoryReader    carts.CartRepositoryReaderInterfaces
 	cartRepositoryWriter    carts.CartRepositoryWriterInterfaces
-	productRepositoryReader products.ProductRepositoryReaderInterfaces
+	productService          product.ProductServiceInterfaces
 	tx                      sqlx.Tx
 }
 
 type OptionParams struct {
 	CartRepositoryReader    carts.CartRepositoryReaderInterfaces
 	CartRepositoryWriter    carts.CartRepositoryWriterInterfaces
-	ProductRepositoryReader products.ProductRepositoryReaderInterfaces
+	ProductService          product.ProductServiceInterfaces
 	Tx                      sqlx.Tx
 }
 
@@ -26,7 +26,7 @@ func New(opts OptionParams) *cartService {
 	return &cartService{
 		cartRepositoryReader:    opts.CartRepositoryReader,
 		cartRepositoryWriter:    opts.CartRepositoryWriter,
-		productRepositoryReader: opts.ProductRepositoryReader,
+		productService:          opts.ProductService,
 		tx:                      opts.Tx,
 	}
 }

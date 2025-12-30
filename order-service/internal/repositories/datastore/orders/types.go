@@ -12,5 +12,10 @@ type CreateOrderInput struct {
 
 type Item struct {
 	ProductId uint64
-	Quantity  uint64
+	Quantity  uint8
+}
+
+type CreateOrderDetailInput struct {
+	OrderID uint64
+	Items   []Item
 }

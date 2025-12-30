@@ -1,3 +1,6 @@
+DB_URL = "mysql://root:@tcp(localhost:3306)/e_commerce_product_service"
+MIGRATIONS_DIR := migrations/
+
 .PHONY: clean
 
 clean:
@@ -20,3 +23,17 @@ preview_open_api:
 
 run-api:
 	cd cmd && go run . rest-api
+
+### --- MIGRATIONS ----
+
+migration:
+	migrate create -dir migrations -ext sql $(name)
+
+migrate-up:
+	migrate -database $(DB_URL) -path $(MIGRATIONS_DIR) up
+
+migrate-force:
+	migrate -database $(DB_URL) -path $(MIGRATIONS_DIR) force $(version)
+
+migrate-down:
+	migrate -database $(DB_URL) -path $(MIGRATIONS_DIR) down

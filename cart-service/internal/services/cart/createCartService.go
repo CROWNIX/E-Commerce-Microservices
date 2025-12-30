@@ -20,7 +20,7 @@ func (s *cartService) CreateCart(ctx context.Context, input CreateCartInput) (er
 		return apperror.Conflict("Product has been added to cart")
 	}
 
-	product, err := s.productRepositoryReader.GetDetailProduct(ctx, input.ProductId)
+	product, err := s.productService.GetDetailProduct(ctx, input.ProductId)
 	if err != nil {
 		if errors.Is(err, databases.ErrNoRowFound) {
 			return apperror.NotFound("Product not found")

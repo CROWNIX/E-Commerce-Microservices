@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package product;
+
+option go_package = "cart-service/proto/product";
+
+// Product Service definition
+service ProductService {
+  rpc GetProductDetail(GetProductDetailRequest) returns (GetProductDetailResponse);
+}
+
+// Request message
+message GetProductDetailRequest {
+  uint64 product_id = 1;
+}
+
+// Response message
+message GetProductDetailResponse {
+  uint64 id = 1;
+  string name = 2;
+  repeated string images = 3;           
+  string description = 4;
+  uint64 price = 5;
+  uint32 stock = 6;
+  uint64 final_price = 7;
+  uint32 discount_percent = 8;          
+  uint32 minimum_purchase = 9;        
+  optional uint32 maximum_purchase = 10; 
+}

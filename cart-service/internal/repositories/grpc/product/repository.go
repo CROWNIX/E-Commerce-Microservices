@@ -1,0 +1,52 @@
+package product
+
+import (
+	pb "cart-service/proto/product"
+	"context"
+
+	"github.com/CROWNIX/go-utils/databases"
+)
+
+type productRepository struct {
+	client pb.ProductServiceClient
+}
+
+func NewProductRepository(client pb.ProductServiceClient) ProductServiceInterfaces {
+	return &productRepository{
+		client: client,
+	}
+}
+
+func (r *productRepository) GetDetailProduct(ctx context.Context, productID uint64) (output GetDetailProductOutput, err error) {
+	resp, err := r.client.GetProductDetail(ctx, &pb.GetProductDetailRequest{
+		ProductId: productID,
+	})
+	if err != nil {
+		return output, err
+	}
+
+	output = GetDetailProductOutput{
+		ID:              resp.Id,
+		Name:            resp.Name,
+		Description:     resp.Description,
+		Price:           resp.Price,
+		Stock:           resp.Stock,
+		FinalPrice:      resp.FinalPrice,
+		DiscountPercent: uint8(resp.DiscountPercent),
+		MinimumPurchase: uint8(resp.MinimumPurchase),
+	}
+
+	if len(resp.Images) > 0 {
+		output.Images = databases.NewJSON(resp.Images)
+	} else {
+		// Initialize with empty slice
+		output.Images = databases.NewJSON([]string{})
+	}
+
+	if resp.MaximumPurchase != nil {
+		mp := uint8(*resp.MaximumPurchase)
+		output.MaximumPurchase = &mp
+	}
+
+	return output, nil
+}

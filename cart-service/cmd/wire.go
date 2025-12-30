@@ -9,7 +9,7 @@ package main
 import (
 	"cart-service/internal/infra"
 	"cart-service/internal/repositories/datastore/carts"
-	"cart-service/internal/repositories/datastore/products"
+	grpcProduct "cart-service/internal/repositories/grpc/product"
 	"cart-service/internal/services"
 	"cart-service/internal/services/cart"
 
@@ -19,11 +19,12 @@ import (
 func LoadServices() (*services.Service, func(), error) {
 	wire.Build(
 		infra.NewMysql,
+		infra.NewProductClient,
 		infra.ProvideTx,
 
 		// REPOSITORY DATASTORE LAYER
 		carts.SetWire,
-		products.SetWire,
+		grpcProduct.SetWire,
 
 		// SERVICE LAYER
 		cart.SetWire,

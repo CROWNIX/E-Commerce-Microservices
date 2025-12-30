@@ -18,7 +18,7 @@ func (s *cartService) DecrementCart(ctx context.Context, userID uint64, productI
 		return apperror.NotFound("Cart not found")
 	}
 
-	product, err := s.productRepositoryReader.GetDetailProduct(ctx, productID)
+	product, err := s.productService.GetDetailProduct(ctx, productID)
 	if err != nil {
 		if errors.Is(err, databases.ErrNoRowFound) {
 			return apperror.NotFound("Product not found")
