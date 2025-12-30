@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package product;
 
-option go_package = "cart-service/proto/product";
+option go_package = "common/genproto/product";
 
 // Product Service definition
 service ProductService {

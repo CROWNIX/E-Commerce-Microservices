@@ -2,7 +2,6 @@ package product
 
 import (
 	"github.com/CROWNIX/go-utils/databases"
-	"github.com/CROWNIX/go-utils/utils/primitive"
 )
 
 type GetProduct struct {
@@ -11,17 +10,6 @@ type GetProduct struct {
 	Images     databases.JSON[[]string] `db:"images"`
 	Price      uint64                   `db:"price"`
 	FinalPrice uint64                   `db:"final_price"`
-}
-
-type GetProductsInput struct {
-	Pagination primitive.PaginationInput
-	Sorting    primitive.Sorting
-	CategoryID *uint64
-}
-
-type GetProductsOutput struct {
-	PaginationOutput primitive.PaginationOutput
-	Items            []GetProduct
 }
 
 type GetDetailProductOutput struct {

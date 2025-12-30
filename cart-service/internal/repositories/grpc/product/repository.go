@@ -1,7 +1,7 @@
 package product
 
 import (
-	pb "cart-service/proto/product"
+	pb "pkg/proto/product/generated"
 	"context"
 
 	"github.com/CROWNIX/go-utils/databases"
@@ -39,7 +39,6 @@ func (r *productRepository) GetDetailProduct(ctx context.Context, productID uint
 	if len(resp.Images) > 0 {
 		output.Images = databases.NewJSON(resp.Images)
 	} else {
-		// Initialize with empty slice
 		output.Images = databases.NewJSON([]string{})
 	}
 

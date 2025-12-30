@@ -1,31 +1,11 @@
 package infra
 
 import (
-	pb "cart-service/proto/product"
-	"log/slog"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"pkg/client/product"
+	pb "pkg/proto/product/generated"
 )
 
 func NewProductClient() (pb.ProductServiceClient, func(), error) {
-	conn, err := grpc.NewClient(
-        "localhost:50051",
-        grpc.WithTransportCredentials(insecure.NewCredentials()),
-    )
-    if err != nil {
-        slog.Error("did not connect", "error", err)
-        return nil, nil, err
-    }
-
-    client := pb.NewProductServiceClient(conn)
-
-    cleanup := func() {
-        if err := conn.Close(); err != nil {
-            slog.Error("failed to close grpc connection", "error", err)
-        }
-    }
-
-	return client, cleanup, nil
+	// TODO: Get target from config
+	return product.NewProductClient("localhost:50051")
 }
-
