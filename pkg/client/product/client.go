@@ -3,7 +3,8 @@ package product
 import (
 	"log/slog"
 
-	product "pkg/proto/product/generated"
+	product "pkg/proto/generated/product"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

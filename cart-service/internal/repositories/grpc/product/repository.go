@@ -1,10 +1,11 @@
 package product
 
 import (
-	pb "pkg/proto/product/generated"
+	pb "pkg/proto/generated/product"
 	"context"
 
 	"github.com/CROWNIX/go-utils/databases"
+	productServiceDto "pkg/services/product-service/dto"
 )
 
 type productRepository struct {
@@ -17,7 +18,7 @@ func NewProductRepository(client pb.ProductServiceClient) ProductServiceInterfac
 	}
 }
 
-func (r *productRepository) GetDetailProduct(ctx context.Context, productID uint64) (output GetDetailProductOutput, err error) {
+func (r *productRepository) GetDetailProduct(ctx context.Context, productID uint64) (output productServiceDto.GetDetailProductOutput, err error) {
 	resp, err := r.client.GetProductDetail(ctx, &pb.GetProductDetailRequest{
 		ProductId: productID,
 	})
@@ -25,7 +26,7 @@ func (r *productRepository) GetDetailProduct(ctx context.Context, productID uint
 		return output, err
 	}
 
-	output = GetDetailProductOutput{
+	output = productServiceDto.GetDetailProductOutput{
 		ID:              resp.Id,
 		Name:            resp.Name,
 		Description:     resp.Description,

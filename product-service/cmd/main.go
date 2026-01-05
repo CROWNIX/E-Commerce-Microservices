@@ -7,7 +7,7 @@ import (
 	"product-service/internal/infra"
 	"product-service/internal/presentations"
 	grpcPresentation "product-service/internal/presentations/grpc"
-	pb "product-service/proto/product"
+	pb "pkg/proto/generated/product"
 
 	"github.com/CROWNIX/go-utils/validatorx"
 	"github.com/spf13/cobra"

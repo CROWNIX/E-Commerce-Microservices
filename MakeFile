@@ -1,0 +1,90 @@
+# Makefile for Protocol Buffer Generation
+
+# Variables
+PROTO_DIR := pkg/proto
+PROTO_SERVICE_DIR := $(PROTO_DIR)/service
+GENERATED_DIR := $(PROTO_DIR)/generated
+GO_OUT := $(GENERATED_DIR)
+
+# Proto files
+PROTO_SERVICES := product category order user payment # Add more services here
+PROTO_FILES := $(foreach service,$(PROTO_SERVICES),$(PROTO_SERVICE_DIR)/$(service)/$(service).proto)
+
+# Colors for output
+COLOR_RESET := \033[0m
+COLOR_BOLD := \033[1m
+COLOR_GREEN := \033[32m
+COLOR_YELLOW := \033[33m
+
+# Default target
+.PHONY: help
+help:
+	@echo "$(COLOR_BOLD)Available commands:$(COLOR_RESET)"
+	@echo "  $(COLOR_GREEN)make proto-gen$(COLOR_RESET)          - Generate all proto files"
+	@echo "  $(COLOR_GREEN)make proto-gen-product$(COLOR_RESET)  - Generate product service proto"
+	@echo "  $(COLOR_GREEN)make proto-gen-category$(COLOR_RESET) - Generate category service proto"
+	@echo "  $(COLOR_GREEN)make proto-gen-order$(COLOR_RESET)    - Generate order service proto"
+	@echo "  $(COLOR_GREEN)make proto-clean$(COLOR_RESET)        - Clean generated files"
+	@echo "  $(COLOR_GREEN)make proto-install$(COLOR_RESET)      - Install required tools"
+
+# Install required tools
+.PHONY: proto-install
+proto-install:
+	@echo "$(COLOR_YELLOW)Installing protoc plugins...$(COLOR_RESET)"
+	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+	@echo "$(COLOR_GREEN)✓ Plugins installed$(COLOR_RESET)"
+
+# Create generated directory if not exists
+$(GENERATED_DIR):
+	@mkdir -p $(GENERATED_DIR)
+
+# Generate all proto files
+.PHONY: proto-gen
+proto-gen: $(GENERATED_DIR)
+	@echo "$(COLOR_YELLOW)Generating all proto files...$(COLOR_RESET)"
+	@for service in $(PROTO_SERVICES); do \
+		echo "$(COLOR_YELLOW)→ Generating $$service service...$(COLOR_RESET)"; \
+		mkdir -p $(GENERATED_DIR)/$$service; \
+		protoc \
+			--proto_path=$(PROTO_SERVICE_DIR)/$$service \
+			--go_out=$(GENERATED_DIR)/$$service \
+			--go_opt=paths=source_relative \
+			--go-grpc_out=$(GENERATED_DIR)/$$service \
+			--go-grpc_opt=paths=source_relative \
+			$(PROTO_SERVICE_DIR)/$$service/*.proto; \
+		if [ $$? -eq 0 ]; then \
+			echo "$(COLOR_GREEN)  ✓ $$service generated$(COLOR_RESET)"; \
+		else \
+			echo "$(COLOR_RED)  ✗ Failed to generate $$service$(COLOR_RESET)"; \
+			exit 1; \
+		fi \
+	done
+	@echo "$(COLOR_GREEN)✓ All proto files generated successfully$(COLOR_RESET)"
+
+# Generate individual service proto files
+.PHONY: proto-gen-product
+proto-gen-product: $(GENERATED_DIR)
+	@echo "$(COLOR_YELLOW)Generating product service proto...$(COLOR_RESET)"
+	@mkdir -p $(GENERATED_DIR)/product
+	protoc \
+		--proto_path=$(PROTO_SERVICE_DIR)/product \
+		--go_out=$(GENERATED_DIR)/product \
+		--go_opt=paths=source_relative \
+		--go-grpc_out=$(GENERATED_DIR)/product \
+		--go-grpc_opt=paths=source_relative \
+		$(PROTO_SERVICE_DIR)/product/*.proto
+	@echo "$(COLOR_GREEN)✓ Product proto generated$(COLOR_RESET)"
+
+# Clean generated files
+.PHONY: proto-clean
+proto-clean:
+	@echo "$(COLOR_YELLOW)Cleaning generated proto files...$(COLOR_RESET)"
+	@rm -rf $(GENERATED_DIR)
+	@echo "$(COLOR_GREEN)✓ Generated files cleaned$(COLOR_RESET)"
+
+# Watch for changes (requires entr: brew install entr or apt install entr)
+.PHONY: proto-watch
+proto-watch:
+	@echo "$(COLOR_YELLOW)Watching for proto file changes...$(COLOR_RESET)"
+	@find $(PROTO_SERVICE_DIR) -name "*.proto" | entr -c make proto-gen

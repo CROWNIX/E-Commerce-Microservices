@@ -2,7 +2,7 @@ package infra
 
 import (
 	"pkg/client/product"
-	pb "pkg/proto/product/generated"
+	pb "pkg/proto/generated/product"
 )
 
 func NewProductClient() (pb.ProductServiceClient, func(), error) {

@@ -13,7 +13,7 @@ func (s *productService) GetDetailProduct(ctx context.Context, productID uint64)
 
 	if err != nil {
 		if errors.Is(err, databases.ErrNoRowFound) {
-			return output, apperror.NotFound("Product not found")
+			return output, apperror.NotFound("Product tidak ditemukan")
 		}
 		return output, err
 	}

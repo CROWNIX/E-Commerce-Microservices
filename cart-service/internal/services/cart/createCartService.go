@@ -3,10 +3,8 @@ package cart
 import (
 	"cart-service/internal/repositories/datastore/carts"
 	"context"
-	"errors"
 
 	"github.com/CROWNIX/go-utils/apperror"
-	"github.com/CROWNIX/go-utils/databases"
 )
 
 func (s *cartService) CreateCart(ctx context.Context, input CreateCartInput) (err error) {
@@ -22,10 +20,6 @@ func (s *cartService) CreateCart(ctx context.Context, input CreateCartInput) (er
 
 	product, err := s.productService.GetDetailProduct(ctx, input.ProductId)
 	if err != nil {
-		if errors.Is(err, databases.ErrNoRowFound) {
-			return apperror.NotFound("Product not found")
-		}
-
 		return err
 	}
 

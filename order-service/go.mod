@@ -12,7 +12,6 @@ tool (
 require (
 	github.com/CROWNIX/go-utils v0.0.1
 	github.com/Masterminds/squirrel v1.5.4
-	github.com/confluentinc/confluent-kafka-go/v2 v2.12.0
 	github.com/gin-gonic/gin v1.10.1
 	github.com/go-playground/universal-translator v0.18.1
 	github.com/go-playground/validator/v10 v10.26.0
@@ -20,6 +19,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/google/wire v0.7.0
 	github.com/redis/go-redis/v9 v9.17.2
+	github.com/segmentio/kafka-go v0.4.49
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/viper v1.21.0
@@ -85,7 +85,6 @@ require (
 	github.com/rs/zerolog v1.34.0 // indirect
 	github.com/sagikazarmark/locafero v0.11.0 // indirect
 	github.com/securego/gosec/v2 v2.22.8 // indirect
-	github.com/segmentio/kafka-go v0.4.48 // indirect
 	github.com/sourcegraph/conc v0.3.1-0.20240121214520-5f936abd7ae8 // indirect
 	github.com/speakeasy-api/jsonpath v0.6.0 // indirect
 	github.com/speakeasy-api/openapi-overlay v0.10.2 // indirect
@@ -114,6 +113,7 @@ require (
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/arch v0.17.0 // indirect
 	golang.org/x/crypto v0.41.0 // indirect
+	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 // indirect
 	golang.org/x/mod v0.27.0 // indirect
 	golang.org/x/net v0.43.0 // indirect
 	golang.org/x/oauth2 v0.30.0 // indirect

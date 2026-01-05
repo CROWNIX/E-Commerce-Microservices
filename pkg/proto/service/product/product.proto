@@ -7,6 +7,7 @@ option go_package = "common/genproto/product";
 // Product Service definition
 service ProductService {
   rpc GetProductDetail(GetProductDetailRequest) returns (GetProductDetailResponse);
+  rpc CountProductByIds(CountProductByIdsRequest) returns (CountProductByIdsResponse);
 }
 
 // Request message
@@ -26,4 +27,12 @@ message GetProductDetailResponse {
   uint32 discount_percent = 8;          
   uint32 minimum_purchase = 9;        
   optional uint32 maximum_purchase = 10; 
+}
+
+message CountProductByIdsRequest {
+  repeated uint64 productIds = 1;
+}
+
+message CountProductByIdsResponse {
+  uint32 total = 1;
 }

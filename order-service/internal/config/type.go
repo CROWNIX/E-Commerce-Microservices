@@ -10,6 +10,7 @@ type Config struct {
 	DB          ConfigDB    `mapstructure:"DB"`
 	JWT   		JWTConfig   `mapstructure:"JWT"`
 	Redis   	RedisConfig `mapstructure:"REDIS"`
+	Kafka  KafkaConfig `mapstructure:"KAFKA"`
 }
 
 type ConfigDB struct {
@@ -28,6 +29,18 @@ type RedisConfig struct {
 	Address	string		`mapstructure:"ADDRESS"`
 	Db	    int	    	`mapstructure:"DB"`
 }
+
+type KafkaConfig struct {
+	Brokers  []string           `mapstructure:"BROKERS"`
+	Consumer KafkaConsumerConfig `mapstructure:"CONSUMER"`
+}
+
+type KafkaConsumerConfig struct {
+	GroupID     string        `mapstructure:"GROUP_ID"`
+	Topic       string        `mapstructure:"TOPIC"`
+}
+
+
 
 var config *Config
 

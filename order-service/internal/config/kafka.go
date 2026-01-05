@@ -1,33 +1,40 @@
 package config
 
 import (
-	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
+	"github.com/segmentio/kafka-go"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
-func NewKafkaConsumer(config *viper.Viper, log *logrus.Logger) *kafka.Consumer {
-	kafkaConfig := &kafka.ConfigMap{
-		"bootstrap.servers": config.GetString("kafka.bootstrap.servers"),
-		"group.id":          config.GetString("kafka.group.id"),
-		"auto.offset.reset": config.GetString("kafka.auto.offset.reset"),
+func NewKafkaConsumer(config *viper.Viper, log *logrus.Logger) *kafka.Reader {
+	brokers := []string{
+		config.GetString("kafka.bootstrap.servers"),
 	}
 
-	consumer, err := kafka.NewConsumer(kafkaConfig)
-	if err != nil {
-		log.Fatalf("Failed to create consumer: %v", err)
-	}
-	return consumer
+	reader := kafka.NewReader(kafka.ReaderConfig{
+		Brokers: brokers,
+		GroupID: config.GetString("kafka.group.id"),
+		Topic:   config.GetString("kafka.topic"),
+
+		StartOffset: kafka.FirstOffset,
+	})
+
+	log.Info("Kafka consumer initialized")
+
+	return reader
 }
 
-func NewKafkaProducer(config *viper.Viper, log *logrus.Logger) *kafka.Producer {
-	kafkaConfig := &kafka.ConfigMap{
-		"bootstrap.servers": config.GetString("kafka.bootstrap.servers"),
+func NewKafkaProducer(config *viper.Viper, log *logrus.Logger) *kafka.Writer {
+	brokers := []string{
+		config.GetString("kafka.bootstrap.servers"),
 	}
 
-	producer, err := kafka.NewProducer(kafkaConfig)
-	if err != nil {
-		log.Fatalf("Failed to create producer: %v", err)
-	}
-	return producer
+	writer := kafka.NewWriter(kafka.WriterConfig{
+		Brokers:  brokers,
+		Balancer: &kafka.LeastBytes{},
+	})
+
+	log.Info("Kafka producer initialized")
+
+	return writer
 }
