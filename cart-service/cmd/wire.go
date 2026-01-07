@@ -9,7 +9,7 @@ package main
 import (
 	"cart-service/internal/infra"
 	"cart-service/internal/repositories/datastore/carts"
-	grpcProduct "cart-service/internal/repositories/grpc/product"
+	grpcProduct "cart-service/internal/repositories/grpc/products"
 	"cart-service/internal/services"
 	"cart-service/internal/services/cart"
 

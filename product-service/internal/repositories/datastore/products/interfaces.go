@@ -9,6 +9,7 @@ type ProductRepositoryReaderInterfaces interface {
 	GetDetailProduct(context.Context, uint64) (GetDetailProductOutput, error)
 	GetStockForUpdate(context.Context, uint64) (uint32, error)
 	CountProductByIds(context.Context, []uint64) (uint32, error)
+	GetProductByIds(context.Context, []uint64) ([]GetProductByIdsOutput, error)
 }
 
 type ProductRepositoryWriterInterfaces interface {

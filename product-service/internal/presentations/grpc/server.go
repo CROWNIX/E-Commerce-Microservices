@@ -5,11 +5,13 @@ import (
 	pb "pkg/proto/generated/product"
 	"product-service/internal/repositories/datastore/products"
 	"product-service/internal/services/product"
+
+	"github.com/CROWNIX/go-utils/utils/generic"
 )
 
 type Server struct {
 	pb.UnimplementedProductServiceServer
-	productService product.ProductServiceInterfaces
+	productService          product.ProductServiceInterfaces
 	productRepositoryReader products.ProductRepositoryReaderInterfaces
 }
 
@@ -45,7 +47,7 @@ func (s *Server) GetProductDetail(ctx context.Context, req *pb.GetProductDetailR
 	return response, nil
 }
 
-func (s *Server) CountProductByIds(ctx context.Context, request *pb.CountProductByIdsRequest) (*pb.CountProductByIdsResponse, error){
+func (s *Server) CountProductByIds(ctx context.Context, request *pb.CountProductByIdsRequest) (*pb.CountProductByIdsResponse, error) {
 	total, err := s.productRepositoryReader.CountProductByIds(ctx, request.ProductIds)
 	if err != nil {
 		return nil, err
@@ -56,4 +58,39 @@ func (s *Server) CountProductByIds(ctx context.Context, request *pb.CountProduct
 	}
 
 	return response, nil
+}
+
+func (s *Server) GetProductByIds(ctx context.Context, request *pb.GetProductByIdsRequest) (*pb.GetProductByIdsResponse, error) {
+	productsOutput, err := s.productRepositoryReader.GetProductByIds(ctx, request.ProductIds)
+	if err != nil {
+		return nil, err
+	}
+
+	response := generic.TransformSlice(productsOutput, func(product products.GetProductByIdsOutput) *pb.GetProductDetailResponse {
+		var maxPurchase *uint32
+
+		if product.MaximumPurchase != nil {
+			v := uint32(*product.MaximumPurchase)
+			maxPurchase = &v
+		}
+
+		return &pb.GetProductDetailResponse{
+			Id:              product.ID,
+			Name:            product.Name,
+			Images:          product.Images.V,
+			Description:     product.Description,
+			Price:           product.Price,
+			Stock:           product.Stock,
+			FinalPrice:      product.FinalPrice,
+			DiscountPercent: uint32(product.DiscountPercent),
+			MinimumPurchase: uint32(product.MinimumPurchase),
+			MaximumPurchase: maxPurchase,
+		}
+	})
+
+	output := pb.GetProductByIdsResponse{
+		Products: response,
+	}
+
+	return &output, nil
 }

@@ -42,7 +42,7 @@ type CreateOrderServiceInput struct {
 
 type Item struct {
 	ProductId uint64
-	Quantity  uint64
+	Quantity  uint32
 }
 
 type QrisData struct {

@@ -1,4 +1,4 @@
-package product
+package products
 
 import (
 	"github.com/CROWNIX/go-utils/databases"

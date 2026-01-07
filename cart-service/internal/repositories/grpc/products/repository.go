@@ -1,4 +1,4 @@
-package product
+package products
 
 import (
 	pb "pkg/proto/generated/product"

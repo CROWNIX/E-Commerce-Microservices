@@ -9,6 +9,7 @@ package main
 import (
 	"order-service/internal/infra"
 	"order-service/internal/repositories/datastore/orders"
+	grpcProduct "order-service/internal/repositories/grpc/products"
 	"order-service/internal/services"
 	"order-service/internal/services/order"
 
@@ -18,10 +19,12 @@ import (
 func LoadServices() (*services.Service, func(), error) {
 	wire.Build(
 		infra.NewMysql,
+		infra.NewProductClient,
 		infra.ProvideTx,
 
 		// REPOSITORY DATASTORE LAYER
 		orders.SetWire,
+		grpcProduct.SetWire,
 
 		// SERVICE LAYER
 		order.SetWire,

@@ -8,6 +8,7 @@ option go_package = "common/genproto/product";
 service ProductService {
   rpc GetProductDetail(GetProductDetailRequest) returns (GetProductDetailResponse);
   rpc CountProductByIds(CountProductByIdsRequest) returns (CountProductByIdsResponse);
+  rpc GetProductByIds(GetProductByIdsRequest) returns (GetProductByIdsResponse);
 }
 
 // Request message
@@ -36,3 +37,12 @@ message CountProductByIdsRequest {
 message CountProductByIdsResponse {
   uint32 total = 1;
 }
+
+message GetProductByIdsRequest {
+  repeated uint64 productIds = 1;
+}
+
+message GetProductByIdsResponse {
+  repeated GetProductDetailResponse products = 1;
+}
+
