@@ -4,6 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log/slog"
+	"order-service/internal/primitive/enum"
+	"order-service/internal/repositories/datastore/orders"
 
 	productServiceDto "pkg/services/product-service/dto"
 
@@ -13,65 +16,106 @@ import (
 )
 
 func (s *orderService) CreateOrder(ctx context.Context, input CreateOrderServiceInput) (output *CreateOrderServiceOutput, err error) {
-	productIds := generic.TransformSlice(input.Items, func(item Item) uint64 {
-		return item.ProductId
-	})
+	productIDs := extractProductIDs(input.Items)
 
 	err = s.tx.DoTxContext(ctx, &sql.TxOptions{Isolation: sql.LevelReadCommitted}, func(ctx context.Context, tx sqlx.RDBMS) error {
-		products, err := s.productService.GetProductByIds(ctx, productIds)
+		products, err := s.productService.GetProductByIds(ctx, productIDs)
 		if err != nil {
-			return err
+			return apperror.InternalServer("Internal Server Error")
 		}
 
-		if len(input.Items) != len(products) {
+		if len(products) != len(productIDs) {
 			return apperror.NotFound("One of product not found")
 		}
 
-		subTotal, err := calculateTotalPriceAndValidateOrder(input, products)
-		if err != nil {
+		err = validateOrderItems(input.Items, products)
+		if err != nil{
 			return err
 		}
 
+		subTotal := calculateSubTotal(input.Items, products)
+
 		if input.GrandTotal != subTotal {
-			return apperror.BadRequest("Grand total does not match the calculated total")
+			return apperror.BadRequest("Grand total does not match calculated total")
 		}
 
-		return nil
+		orderID, err := s.orderRepositoryWriter.CreateOrder(ctx, orders.CreateOrderInput{
+			UserID:         input.UserID,
+			AddressID:      input.AddressID,
+			PaymentMethodID: input.PaymentMethodID,
+			Status:         string(enum.OrderStatusPendingPayment),
+			GrandTotal:     subTotal,
+		})
+		
+		if err != nil {
+			slog.Error("failed to create order", slog.String("error", err.Error()))
+			return apperror.InternalServer("Internal Server Error")
+		}
+
+		var orderDetails []orders.CreateOrderDetailInput
+		orderDetails = append(orderDetails, orders.CreateOrderDetailInput{
+			OrderID: orderID,
+			Items: generic.TransformSlice(input.Items),
+		})
+
+		err = s.orderRepositoryWriter.CreateOrderDetail(ctx, orders.CreateOrderDetailInput{
+			OrderID: orderID,
+			Items:   generic.TransformSlice(order),
+		})
+
+		return apperror.InternalServer("Internal Server Error")
 	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	return
+	return &CreateOrderServiceOutput{}, nil
 }
 
-func calculateTotalPriceAndValidateOrder(input CreateOrderServiceInput, products []productServiceDto.GetDetailProductOutput) (subTotal uint64, err error) {
-	productOrders := map[uint64]Item{}
+func extractProductIDs(items []Item) []uint64 {
+	return generic.TransformSlice(items, func(item Item) uint64 {
+		return item.ProductId
+	})
+}
 
-	for _, item := range input.Items {
-		productOrders[item.ProductId] = item
+func validateOrderItems(items []Item, products []productServiceDto.GetDetailProductOutput) error {
+	productOrderMap := map[uint64]Item{}
+	for _, item := range items {
+		productOrderMap[item.ProductId] = item
 	}
 
 	for _, product := range products {
-		productOrder := productOrders[product.ID]
-
-		if productOrder.Quantity > product.Stock {
-			return 0, apperror.BadRequest(fmt.Sprintf("Unable to create order for product '%s': The product is out of stock", product.Name))
+		orderItem := productOrderMap[product.ID]
+		if orderItem.Quantity > product.Stock {
+			return apperror.BadRequest(fmt.Sprintf("Product '%s' is out of stock", product.Name))
 		}
 
 		if product.MaximumPurchase != nil {
-			if productOrder.Quantity < uint32(product.MinimumPurchase) || productOrder.Quantity > uint32(*product.MaximumPurchase) {
-				return 0, apperror.BadRequest(fmt.Sprintf("Unable to create order for product '%s': The quantity must be between the minimum purchase and the maximum purchase", product.Name))
+			if orderItem.Quantity < uint32(product.MinimumPurchase) || orderItem.Quantity > uint32(*product.MaximumPurchase) {
+				return apperror.BadRequest(fmt.Sprintf("Invalid quantity for product '%s'", product.Name))
 			}
-		} else {
-			if productOrder.Quantity < uint32(product.MinimumPurchase) {
-				return 0, apperror.BadRequest(fmt.Sprintf("Unable to create order for product '%s': Quantity cannot be less than minimum purchase", product.Name))
-			}
+		} else if orderItem.Quantity < uint32(product.MinimumPurchase) {
+			return apperror.BadRequest(fmt.Sprintf("Quantity below minimum purchase for product '%s'", product.Name))
 		}
-
-		subTotal += uint64(productOrder.Quantity) * product.Price
-
 	}
-	return subTotal, nil
+
+	return nil
 }
+
+func calculateSubTotal(items []Item, products []productServiceDto.GetDetailProductOutput) uint64 {
+	productMap := map[uint64]productServiceDto.GetDetailProductOutput{}
+	for _, product := range products {
+		productMap[product.ID] = product
+	}
+
+	var subTotal uint64
+	for _, item := range items {
+		product := productMap[item.ProductId]
+		subTotal += uint64(item.Quantity) * product.Price
+	}
+
+	return subTotal
+}
+
+

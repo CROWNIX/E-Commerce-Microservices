@@ -10,7 +10,7 @@ tool (
 )
 
 require (
-	github.com/CROWNIX/go-utils v0.0.1
+	github.com/CROWNIX/go-utils v0.0.2
 	github.com/Masterminds/squirrel v1.5.4
 	github.com/georgysavva/scany/v2 v2.1.4
 	github.com/gin-gonic/gin v1.10.1

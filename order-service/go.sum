@@ -12,8 +12,8 @@ cloud.google.com/go/longrunning v0.6.7 h1:IGtfDWHhQCgCjwQjV9iiLnUta9LBCo8R9QmAFs
 cloud.google.com/go/longrunning v0.6.7/go.mod h1:EAFV3IZAKmM56TyiE6VAP3VoTzhZzySwI/YI1s/nRsY=
 filippo.io/edwards25519 v1.1.0 h1:FNf4tywRC1HmFuKW5xopWpigGjJKiJSV0Cqo0cJWDaA=
 filippo.io/edwards25519 v1.1.0/go.mod h1:BxyFTGdWcka3PhytdK4V28tE5sGfRvvvRV7EaN4VDT4=
-github.com/CROWNIX/go-utils v0.0.1 h1:p7obB6xVlrHdH9/82GAdN+3GDESTBiRb5X03epzgYp8=
-github.com/CROWNIX/go-utils v0.0.1/go.mod h1:YqDNQ3KVDe4EB8rj7U4RTjNEGT2qnMCpMtYolV1hwF4=
+github.com/CROWNIX/go-utils v0.0.2 h1:+XhnqBcXCct+aX74a9iCvqFgRX00TU5oYcG4G/UjD5E=
+github.com/CROWNIX/go-utils v0.0.2/go.mod h1:YqDNQ3KVDe4EB8rj7U4RTjNEGT2qnMCpMtYolV1hwF4=
 github.com/Masterminds/squirrel v1.5.4 h1:uUcX/aBc8O7Fg9kaISIUsHXdKuqehiXAMQTYX8afzqM=
 github.com/Masterminds/squirrel v1.5.4/go.mod h1:NNaOrjSoIDfDA40n7sr2tPNZRfjzjA400rg+riTZj10=
 github.com/bsm/ginkgo/v2 v2.12.0 h1:Ny8MWAHyOepLGlLKYmXG4IEkioBysk6GpaRTLC8zwWs=

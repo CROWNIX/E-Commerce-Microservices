@@ -1,47 +1,72 @@
 package enum
 
-// StatusCodeOrder adalah hasil eksekusi API (success/error).
+// StatusCodeOrder adalah hasil eksekusi API (success / business error).
 type StatusCodeOrder string
 
 const (
-	ErrTotalPriceMismatch StatusCodeOrder = "ERR_TOTAL_PRICE_MISMATCH"
+	// Validation / Business Errors
+	ErrTotalPriceMismatch    StatusCodeOrder = "ERR_TOTAL_PRICE_MISMATCH"
+	ErrInvalidPaymentMethod  StatusCodeOrder = "ERR_INVALID_PAYMENT_METHOD"
+	ErrFailedChargePayment   StatusCodeOrder = "ERR_FAILED_CHARGE_PAYMENT"
+	ErrPlatformFeeIsZero     StatusCodeOrder = "ERR_PLATFORM_FEE_IS_ZERO"
+	ErrOutOfStock            StatusCodeOrder = "ERR_OUT_OF_STOCK"
+	ErrInvalidShippingMethod StatusCodeOrder = "ERR_INVALID_SHIPPING_METHOD"
 
-	ErrInvalidPaymentMethod StatusCodeOrder = "ERR_INVALID_PAYMENT_METHOD"
-
-	ErrFailedChargePayment StatusCodeOrder = "ERR_FAILED_CHARGE_PAYMENT"
-
-	ErrPlatformFeeIsZero StatusCodeOrder = "ERR_PLATFORM_FEE_IS_ZERO"
-
-	// Success: order created successfully
-	SuccessOrder StatusCodeOrder = "SUCCESS"
+	// Success
+	SuccessOrderCreated StatusCodeOrder = "SUCCESS_ORDER_CREATED"
 )
 
-// OrderStatus adalah state lifecycle dari Order di sistem.
+// OrderStatus adalah lifecycle pesanan di e-commerce.
 type OrderStatus string
 
 const (
-	// Order baru dibuat, menunggu pembayaran
-	OrderStatusOnOrder OrderStatus = "ON_ORDER"
-	// Order sedang diproses / dilayani setelah pembayaran
-	OrderStatusIsBeingServed OrderStatus = "IS_BEING_SERVED"
-	// Order dibatalkan (oleh user/system)
-	OrderStatusCanceled OrderStatus = "ORDER_CANCELED"
-	// Order gagal (contoh: payment error, expired)
-	OrderStatusFailed OrderStatus = "ORDER_FAILED"
+	// Order dibuat, menunggu pembayaran
+	OrderStatusPendingPayment OrderStatus = "PENDING_PAYMENT"
+
+	// Pembayaran berhasil, menunggu diproses seller
+	OrderStatusPaid OrderStatus = "PAID"
+
+	// Order sedang diproses / dikemas
+	OrderStatusProcessing OrderStatus = "PROCESSING"
+
+	// Order dikirim
+	OrderStatusShipped OrderStatus = "SHIPPED"
+
+	// Order telah diterima customer
+	OrderStatusDelivered OrderStatus = "DELIVERED"
+
+	// Order selesai (complete)
+	OrderStatusCompleted OrderStatus = "COMPLETED"
+
+	// Order dibatalkan
+	OrderStatusCanceled OrderStatus = "CANCELED"
+
+	// Order gagal (system / payment error)
+	OrderStatusFailed OrderStatus = "FAILED"
 )
 
-// OrderPaymentStatus adalah state lifecycle dari pembayaran.
+// OrderPaymentStatus adalah lifecycle pembayaran order.
 type OrderPaymentStatus string
 
 const (
-	// Baru dibuat, menunggu pembayaran
-	PaymentStatusWaiting OrderPaymentStatus = "WAITING_PAYMENT"
+	// Menunggu pembayaran
+	PaymentStatusPending OrderPaymentStatus = "PENDING"
+
 	// Pembayaran berhasil
-	PaymentStatusCompleted OrderPaymentStatus = "PAYMENT_COMPLETED"
-	// Pembayaran expired (habis waktu)
-	PaymentStatusExpired OrderPaymentStatus = "PAYMENT_EXPIRED"
+	PaymentStatusPaid OrderPaymentStatus = "PAID"
+
+	// Pembayaran gagal
+	PaymentStatusFailed OrderPaymentStatus = "FAILED"
+
+	// Pembayaran expired
+	PaymentStatusExpired OrderPaymentStatus = "EXPIRED"
+
 	// Pembayaran dibatalkan
-	PaymentStatusCanceled OrderPaymentStatus = "PAYMENT_CANCELED"
-	// Pembayaran gagal (error)
-	PaymentStatusFailed OrderPaymentStatus = "PAYMENT_FAILED"
+	PaymentStatusCanceled OrderPaymentStatus = "CANCELED"
+
+	// Refund sedang diproses
+	PaymentStatusRefunding OrderPaymentStatus = "REFUNDING"
+
+	// Refund selesai
+	PaymentStatusRefunded OrderPaymentStatus = "REFUNDED"
 )
