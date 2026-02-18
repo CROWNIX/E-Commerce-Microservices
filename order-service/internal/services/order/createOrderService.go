@@ -52,15 +52,14 @@ func (s *orderService) CreateOrder(ctx context.Context, input CreateOrderService
 			return apperror.InternalServer("Internal Server Error")
 		}
 
-		var orderDetails []orders.CreateOrderDetailInput
-		orderDetails = append(orderDetails, orders.CreateOrderDetailInput{
-			OrderID: orderID,
-			Items: generic.TransformSlice(input.Items),
-		})
-
 		err = s.orderRepositoryWriter.CreateOrderDetail(ctx, orders.CreateOrderDetailInput{
 			OrderID: orderID,
-			Items:   generic.TransformSlice(order),
+			Items:   generic.TransformSlice(input.Items, func(item Item) orders.Item {
+				return orders.Item{
+					ProductId: item.ProductId,
+					Quantity:  item.Quantity,
+				}
+			}),
 		})
 
 		return apperror.InternalServer("Internal Server Error")

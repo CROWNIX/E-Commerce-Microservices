@@ -5,6 +5,7 @@ import (
 	"order-service/internal/repositories/grpc/products"
 
 	"github.com/CROWNIX/go-utils/databases/sqlx"
+	utilKafka "github.com/CROWNIX/go-utils/broker/kafka"
 	"github.com/google/wire"
 )
 
@@ -12,6 +13,7 @@ type orderService struct {
 	orderRepositoryReader orders.OrderRepositoryReaderInterfaces
 	orderRepositoryWriter orders.OrderRepositoryWriterInterfaces
 	productService        products.ProductServiceInterfaces
+	pubSubKafka           utilKafka.PubSub
 	tx                    sqlx.Tx
 }
 

@@ -12,7 +12,7 @@ type CreateOrderInput struct {
 
 type Item struct {
 	ProductId uint64
-	Quantity  uint8
+	Quantity  uint32
 }
 
 type CreateOrderDetailInput struct {
