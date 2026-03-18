@@ -2,6 +2,7 @@ package products
 
 import (
 	"context"
+	"fmt"
 	pb "pkg/proto/generated/product"
 
 	productServiceDto "pkg/services/product-service/dto"
@@ -66,6 +67,7 @@ func (r *productRepository) GetProductByIds(ctx context.Context, productIds []ui
 	resp, err := r.client.GetProductByIds(ctx, &pb.GetProductByIdsRequest{
 		ProductIds: productIds,
 	})
+
 	if err != nil {
 		return nil, err
 	}

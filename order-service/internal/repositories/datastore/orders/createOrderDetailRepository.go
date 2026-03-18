@@ -7,7 +7,7 @@ import (
 
 func (r *orderRepository) CreateOrderDetail(ctx context.Context, input CreateOrderDetailInput) (err error){
 	query := r.DB.Sq. 
-		Insert(models.OrderTableName). 
+		Insert(models.OrderDetailTableName). 
 		Columns(
 			models.OrderDetailField.OrderID,
 			models.OrderDetailField.ProductID,

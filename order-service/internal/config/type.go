@@ -4,6 +4,7 @@ import "time"
 
 type Config struct {
 	AppName     string      `mapstructure:"APP_NAME"`
+	ServiceName string      `mapstructure:"SERVICE_NAME"`
 	RestApiPort int         `mapstructure:"REST_API_PORT"`
 	AppEnv      string      `mapstructure:"APP_ENV"`
 	GinMode     string      `mapstructure:"GIN_MODE"`
@@ -31,13 +32,12 @@ type RedisConfig struct {
 }
 
 type KafkaConfig struct {
-	Brokers  []string           `mapstructure:"BROKERS"`
+	Broker  string           `mapstructure:"BROKER"`
 	Consumer KafkaConsumerConfig `mapstructure:"CONSUMER"`
 }
 
 type KafkaConsumerConfig struct {
 	GroupID     string        `mapstructure:"GROUP_ID"`
-	Topic       string        `mapstructure:"TOPIC"`
 }
 
 

@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"fmt"
 	pb "pkg/proto/generated/product"
 	"product-service/internal/repositories/datastore/products"
 	"product-service/internal/services/product"
@@ -61,12 +62,12 @@ func (s *Server) CountProductByIds(ctx context.Context, request *pb.CountProduct
 }
 
 func (s *Server) GetProductByIds(ctx context.Context, request *pb.GetProductByIdsRequest) (*pb.GetProductByIdsResponse, error) {
-	productsOutput, err := s.productRepositoryReader.GetProductByIds(ctx, request.ProductIds)
+	productsOutput, err := s.productService.GetProductsByIds(ctx, request.ProductIds)
 	if err != nil {
 		return nil, err
 	}
 
-	response := generic.TransformSlice(productsOutput, func(product products.GetProductByIdsOutput) *pb.GetProductDetailResponse {
+	response := generic.TransformSlice(productsOutput, func(product product.GetDetailProductOutput) *pb.GetProductDetailResponse {
 		var maxPurchase *uint32
 
 		if product.MaximumPurchase != nil {

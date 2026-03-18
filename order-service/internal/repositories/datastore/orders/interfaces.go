@@ -1,11 +1,14 @@
 package orders
 
-import "context"
+import (
+	"context"
+	utilSql "github.com/CROWNIX/go-utils/databases/sqlx"
+)
 
 type OrderRepositoryReaderInterfaces interface {
 }
 
 type OrderRepositoryWriterInterfaces interface {
-	CreateOrder(context.Context, CreateOrderInput) (uint64, error)
+	CreateOrder(context.Context, utilSql.RDBMS, CreateOrderInput) (uint64, error)
 	CreateOrderDetail(context.Context, CreateOrderDetailInput) error
 }

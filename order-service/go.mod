@@ -10,7 +10,7 @@ tool (
 )
 
 require (
-	github.com/CROWNIX/go-utils v0.0.3
+	github.com/CROWNIX/go-utils v0.0.5
 	github.com/Masterminds/squirrel v1.5.4
 	github.com/gin-gonic/gin v1.10.1
 	github.com/go-playground/universal-translator v0.18.1

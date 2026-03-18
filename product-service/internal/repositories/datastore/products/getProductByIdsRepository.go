@@ -31,7 +31,11 @@ func (r *productRepository) GetProductByIds(ctx context.Context, productIds []ui
 
 	err = r.DB.RDBMS.QuerySq(ctx, query, true, func(rows *sql.Rows) error {
 		if rows.Next() {
-			return dbscan.ScanRow(&products, rows)
+			var product GetProductByIdsOutput
+			if err := dbscan.ScanRow(&product, rows); err != nil {
+				return err
+			}
+			products = append(products, product)
 		}
 		return nil
 	})

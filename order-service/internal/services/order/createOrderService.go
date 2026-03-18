@@ -3,16 +3,22 @@ package order
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log/slog"
+	"order-service/internal/config"
 	"order-service/internal/primitive/enum"
 	"order-service/internal/repositories/datastore/orders"
+	"time"
+
+	utilKafka "github.com/CROWNIX/go-utils/broker/kafka"
 
 	productServiceDto "pkg/services/product-service/dto"
 
 	"github.com/CROWNIX/go-utils/apperror"
 	"github.com/CROWNIX/go-utils/databases/sqlx"
 	"github.com/CROWNIX/go-utils/utils/generic"
+	"github.com/segmentio/kafka-go"
 )
 
 func (s *orderService) CreateOrder(ctx context.Context, input CreateOrderServiceInput) (output *CreateOrderServiceOutput, err error) {
@@ -21,25 +27,29 @@ func (s *orderService) CreateOrder(ctx context.Context, input CreateOrderService
 	err = s.tx.DoTxContext(ctx, &sql.TxOptions{Isolation: sql.LevelReadCommitted}, func(ctx context.Context, tx sqlx.RDBMS) error {
 		products, err := s.productService.GetProductByIds(ctx, productIDs)
 		if err != nil {
+			slog.Error("failed to get products", slog.String("error", err.Error()))
 			return apperror.InternalServer("Internal Server Error")
 		}
 
 		if len(products) != len(productIDs) {
+			slog.Error("one or more products not found", slog.Int("expected", len(productIDs)), slog.Int("found", len(products)))
 			return apperror.NotFound("One of product not found")
 		}
 
 		err = validateOrderItems(input.Items, products)
 		if err != nil{
+			slog.Error("invalid order items", slog.String("error", err.Error()))
 			return err
 		}
 
 		subTotal := calculateSubTotal(input.Items, products)
 
 		if input.GrandTotal != subTotal {
+			slog.Error("grand total mismatch", slog.Uint64("expected", subTotal), slog.Uint64("actual", input.GrandTotal))
 			return apperror.BadRequest("Grand total does not match calculated total")
 		}
 
-		orderID, err := s.orderRepositoryWriter.CreateOrder(ctx, orders.CreateOrderInput{
+		orderID, err := s.orderRepositoryWriter.CreateOrder(ctx, tx, orders.CreateOrderInput{
 			UserID:         input.UserID,
 			AddressID:      input.AddressID,
 			PaymentMethodID: input.PaymentMethodID,
@@ -62,10 +72,50 @@ func (s *orderService) CreateOrder(ctx context.Context, input CreateOrderService
 			}),
 		})
 
-		return apperror.InternalServer("Internal Server Error")
+		if err != nil {
+			slog.Error("failed to create order detail", slog.String("error", err.Error()))
+			return apperror.InternalServer("Internal Server Error")
+		}
+
+		event := map[string]any{
+			"event_type": "order_created",
+			"source": config.GetConfig().AppName,
+			"timestamp": time.Now(),
+			"data": map[string]any{
+				"order_id": orderID,
+			},
+		}
+
+		value, err := json.Marshal(event)
+		if err != nil {
+			slog.Error("failed to marshal event", slog.String("error", err.Error()))
+			return apperror.InternalServer("Internal Server Error")
+		}
+
+
+		if s.pubSubKafka != nil {
+			_, err = s.pubSubKafka.Publish(ctx, utilKafka.PubInput{
+				KeyWriter: config.GetConfig().ServiceName,
+				Messages: []kafka.Message{
+					{
+						Value: []byte(value),
+						Topic: string(enum.KafkaTopicOrderCreated),
+					},
+				},
+			})
+			if err != nil {
+				slog.Error("failed to publish event", slog.String("error", err.Error()))
+				return apperror.InternalServer("Internal Server Error")
+			}
+		} else {
+			slog.Warn("pubsub kafka is nil, skipping publish")
+		}
+
+		return nil
 	})
 
 	if err != nil {
+		slog.Error("transaction failed", slog.String("error", err.Error()))
 		return nil, err
 	}
 

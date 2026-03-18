@@ -8,7 +8,7 @@ type OrderDetail struct {
 	PaymentStatus *string `db:"payment_status" json:"payment_status"`
 }
 
-const OrderDetailTableName = "orders"
+const OrderDetailTableName = "order_details"
 
 var OrderDetailField = struct {
 	OrderID       string
@@ -18,8 +18,8 @@ var OrderDetailField = struct {
 	PaymentStatus string
 }{
 	OrderID:       "id",
-	ProductID:     "user_id",
-	Quantity:      "address_id",
+	ProductID:     "product_id",
+	Quantity:      "quantity",
 	Status:        "status",
 	PaymentStatus: "payment_status",
 }

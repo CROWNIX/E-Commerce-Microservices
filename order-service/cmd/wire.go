@@ -19,6 +19,7 @@ import (
 func LoadServices() (*services.Service, func(), error) {
 	wire.Build(
 		infra.NewMysql,
+		infra.NewKafka,
 		infra.NewProductClient,
 		infra.ProvideTx,
 

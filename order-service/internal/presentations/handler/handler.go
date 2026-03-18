@@ -37,5 +37,6 @@ func NewHandler(opts Options) *Handler {
 // }
 
 func (h *Handler) RegisterRoutes(r *gin.Engine) {
-	// v1 := r.Group("/v1")
+	v1 := r.Group("/v1")
+	v1.POST("/orders", h.ApiV1PostCreateOrder)
 }

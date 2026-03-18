@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/CROWNIX/E-Commerce-Microservices/api-gateway/pkg/utils/jwtutils"
@@ -45,7 +44,6 @@ func(m *AuthMiddleware) JwtMiddlewareUsingRedis(c *gin.Context){
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Missing Authorization header"})
 		return 
 	}
-	fmt.Println("token exists in header")
 	
 	_, err = m.jwtUtil.ParseAndVerifyWithRedis(c.Request.Context(), token)
 	if err != nil{
@@ -58,7 +56,6 @@ func(m *AuthMiddleware) JwtMiddlewareUsingRedis(c *gin.Context){
 
 func (m *AuthMiddleware) getTokenFromHeader(ctx *gin.Context) (string, error) {
 	accessToken := ctx.GetHeader("Authorization")
-	fmt.Println(accessToken)
 	if accessToken == "" {
 		return "", httperror.NewUnauthorizedError()
 	}

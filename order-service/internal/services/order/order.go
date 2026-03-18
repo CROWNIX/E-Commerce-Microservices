@@ -4,8 +4,8 @@ import (
 	"order-service/internal/repositories/datastore/orders"
 	"order-service/internal/repositories/grpc/products"
 
-	"github.com/CROWNIX/go-utils/databases/sqlx"
 	utilKafka "github.com/CROWNIX/go-utils/broker/kafka"
+	"github.com/CROWNIX/go-utils/databases/sqlx"
 	"github.com/google/wire"
 )
 
@@ -21,6 +21,7 @@ type OptionParams struct {
 	OrderRepositoryReader orders.OrderRepositoryReaderInterfaces
 	OrderRepositoryWriter orders.OrderRepositoryWriterInterfaces
 	ProductService        products.ProductServiceInterfaces
+	PubSub                utilKafka.PubSub
 	Tx                    sqlx.Tx
 }
 
@@ -29,6 +30,7 @@ func New(opts OptionParams) *orderService {
 		orderRepositoryReader: opts.OrderRepositoryReader,
 		orderRepositoryWriter: opts.OrderRepositoryWriter,
 		productService:        opts.ProductService,
+		pubSubKafka:           opts.PubSub,
 		tx:                    opts.Tx,
 	}
 }

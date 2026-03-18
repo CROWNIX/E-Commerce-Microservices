@@ -157,6 +157,35 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
         - Cart
+  /orders:
+    post:
+      operationId: ApiPostOrder
+      summary: Create order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderServiceInput'
+      responses:
+        '200':
+          description: Create order successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPostOrderResponseBody'
+        '204':
+          description: 'no content, berhasil dikirim'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '408':
+          $ref: '#/components/responses/Timeout'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Order
 components:
   schemas:
     ApiV1DeleteCartResponseBody:
@@ -196,6 +225,58 @@ components:
         - user_id
         - product_id
         - quantity
+    CreateOrderServiceInput:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          format: uint64
+          example: 1
+        address_id:
+          type: integer
+          format: uint64
+          example: 1
+        payment_method_id:
+          type: integer
+          format: uint64
+          example: 1
+        grand_total:
+          type: integer
+          format: uint64
+          example: 100000
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+      required:
+        - user_id
+        - address_id
+        - payment_method_id
+        - grand_total
+        - items
+    Item:
+      type: object
+      properties:
+        product_id:
+          type: integer
+          format: uint64
+          example: 1
+        quantity:
+          type: integer
+          format: uint32
+          example: 1
+      required:
+        - product_id
+        - quantity
+    ApiPostOrderResponseBody:
+      type: object
+      properties:
+        message:
+          description: Response Successfully
+          type: string
+          example: Create order successfully
+      required:
+        - message
     ApiV1PatchIncrementCartResponseBody:
       type: object
       properties:
