@@ -2,7 +2,6 @@ package product
 
 import (
 	"context"
-	"fmt"
 )
 
 func (s *productService) GetProductsByIds(ctx context.Context, ids []uint64) ([]GetDetailProductOutput, error) {

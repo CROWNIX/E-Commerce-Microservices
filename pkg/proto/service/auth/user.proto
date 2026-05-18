@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "auth-service/proto/user";
+
+// User Service definition
+service UserService {
+  rpc GetUserDetail(GetUserDetailRequest) returns (GetUserDetailResponse);
+}
+
+// Request message
+message GetUserDetailRequest {
+  uint64 user_id = 1;
+}
+
+// Response message
+message GetUserDetailResponse {
+  uint64 id = 1;
+  string username = 2;
+  string email = 3;           
+  string email_verified_at = 4;
+  uint64 password = 5;
+  uint32 remember_token = 6;
+}

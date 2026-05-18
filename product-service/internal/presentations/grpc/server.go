@@ -2,7 +2,6 @@ package grpc
 
 import (
 	"context"
-	"fmt"
 	pb "pkg/proto/generated/product"
 	"product-service/internal/repositories/datastore/products"
 	"product-service/internal/services/product"

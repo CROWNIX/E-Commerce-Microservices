@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"order-service/generated/api"
 	"order-service/internal/services/order"

@@ -24,6 +24,7 @@ help:
 	@echo "  $(COLOR_GREEN)make proto-gen-product$(COLOR_RESET)  - Generate product service proto"
 	@echo "  $(COLOR_GREEN)make proto-gen-category$(COLOR_RESET) - Generate category service proto"
 	@echo "  $(COLOR_GREEN)make proto-gen-order$(COLOR_RESET)    - Generate order service proto"
+	@echo "  $(COLOR_GREEN)make proto-gen-auth$(COLOR_RESET)     - Generate auth service proto"
 	@echo "  $(COLOR_GREEN)make proto-clean$(COLOR_RESET)        - Clean generated files"
 	@echo "  $(COLOR_GREEN)make proto-install$(COLOR_RESET)      - Install required tools"
 
@@ -75,6 +76,20 @@ proto-gen-product: $(GENERATED_DIR)
 		--go-grpc_opt=paths=source_relative \
 		$(PROTO_SERVICE_DIR)/product/*.proto
 	@echo "$(COLOR_GREEN)✓ Product proto generated$(COLOR_RESET)"
+
+# Generate individual service proto files
+.PHONY: proto-gen-auth
+proto-gen-auth: $(GENERATED_DIR)
+	@echo "$(COLOR_YELLOW)Generating auth service proto...$(COLOR_RESET)"
+	@mkdir -p $(GENERATED_DIR)/auth
+	protoc \
+		--proto_path=$(PROTO_SERVICE_DIR)/auth \
+		--go_out=$(GENERATED_DIR)/auth \
+		--go_opt=paths=source_relative \
+		--go-grpc_out=$(GENERATED_DIR)/auth \
+		--go-grpc_opt=paths=source_relative \
+		$(PROTO_SERVICE_DIR)/auth/*.proto
+	@echo "$(COLOR_GREEN)✓ Auth proto generated$(COLOR_RESET)"
 
 # Clean generated files
 .PHONY: proto-clean

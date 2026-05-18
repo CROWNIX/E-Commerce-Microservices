@@ -2,7 +2,6 @@ package products
 
 import (
 	"context"
-	"fmt"
 	pb "pkg/proto/generated/product"
 
 	productServiceDto "pkg/services/product-service/dto"
