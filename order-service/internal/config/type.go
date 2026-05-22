@@ -12,6 +12,14 @@ type Config struct {
 	JWT   		JWTConfig   `mapstructure:"JWT"`
 	Redis   	RedisConfig `mapstructure:"REDIS"`
 	Kafka  KafkaConfig `mapstructure:"KAFKA"`
+	Otel        OtelConfig  `mapstructure:",squash"`
+}
+
+type OtelConfig struct {
+	Enabled  bool   `mapstructure:"OTEL_ENABLED"`
+	Endpoint string `mapstructure:"OTEL_EXPORTER_OTLP_ENDPOINT"`
+	Username string `mapstructure:"OTEL_EXPORTER_OTLP_USERNAME"`
+	Password string `mapstructure:"OTEL_EXPORTER_OTLP_PASSWORD"`
 }
 
 type ConfigDB struct {

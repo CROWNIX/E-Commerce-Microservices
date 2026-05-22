@@ -1,0 +1,6 @@
+{"time":"2026-05-18T22:07:33.900013+07:00","level":"ERROR","msg":"failed to shutdown meter provider","error":"failed to upload metrics: rpc error: code = Unimplemented desc = unknown service opentelemetry.proto.collector.metrics.v1.MetricsService"}
+{"time":"2026-05-18T22:07:33.9050232+07:00","level":"ERROR","msg":"failed to shutdown meter exporter","error":"gRPC exporter is shutdown"}
+{"time":"2026-05-19T14:40:40.0125075+07:00","level":"ERROR","msg":"failed to shutdown meter provider","error":"failed to upload metrics: context deadline exceeded: rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial tcp 127.0.0.1:4317: connectex: No connection could be made because the target machine actively refused it.\""}
+{"time":"2026-05-19T14:40:40.0137546+07:00","level":"ERROR","msg":"failed to shutdown meter exporter","error":"gRPC exporter is shutdown"}
+{"time":"2026-05-20T00:02:29.625305+07:00","level":"ERROR","msg":"failed to shutdown meter provider","error":"failed to upload metrics: context deadline exceeded: rpc error: code = Unavailable desc = connection error: desc = \"error reading server preface: EOF\""}
+{"time":"2026-05-20T00:02:29.6273786+07:00","level":"ERROR","msg":"failed to shutdown meter exporter","error":"gRPC exporter is shutdown"}

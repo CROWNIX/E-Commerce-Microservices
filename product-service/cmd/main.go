@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log/slog"
 	"net"
 	"product-service/internal/config"
@@ -8,6 +9,7 @@ import (
 	"product-service/internal/presentations"
 	grpcPresentation "product-service/internal/presentations/grpc"
 	pb "pkg/proto/generated/product"
+	"pkg/telemetry"
 
 	"github.com/CROWNIX/go-utils/validatorx"
 	"github.com/spf13/cobra"
@@ -22,8 +24,23 @@ var restApiCmd = &cobra.Command{
 			slog.Error("failed to load config", "error", err)
 			return
 		}
+
+		cfg := config.GetConfig()
+		otelCleanup, err := telemetry.Init(context.Background(), telemetry.Config{
+			Enabled:      cfg.Otel.Enabled,
+			ServiceName:  cfg.AppName,
+			Env:          cfg.AppEnv,
+			OtlpEndpoint: cfg.Otel.Endpoint,
+			OtlpUser:     cfg.Otel.Username,
+			OtlpPassword: cfg.Otel.Password,
+		})
+		if err != nil {
+			slog.Error("failed to init telemetry", "error", err)
+			return
+		}
+
 		validatorx.InitValidator()
-		err := config.LoadCustomValidations()
+		err = config.LoadCustomValidations()
 		if err != nil {
 			slog.Error("failed to register custom validation", "error", err)
 			return
@@ -32,9 +49,6 @@ var restApiCmd = &cobra.Command{
 		infra.NewLog()
 
 		serv, cleanUp := LoadServices()
-		if err != nil {
-			panic(err)
-		}
 
 		// Start gRPC server
 		go func() {
@@ -43,7 +57,7 @@ var restApiCmd = &cobra.Command{
 				slog.Error("failed to listen", "error", err)
 				return
 			}
-			s := grpc.NewServer()
+			s := grpc.NewServer(telemetry.GRPCServerOptions()...)
 			pb.RegisterProductServiceServer(s, grpcPresentation.NewServer(serv.ProductService))
 			slog.Info("gRPC server listening at :50051")
 			if err := s.Serve(lis); err != nil {
@@ -51,7 +65,7 @@ var restApiCmd = &cobra.Command{
 			}
 		}()
 
-		presentations.NewPresentation(serv, cleanUp)
+		presentations.NewPresentation(serv, telemetry.Chain(cleanUp, otelCleanup))
 	},
 }
 

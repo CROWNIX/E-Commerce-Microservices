@@ -21,7 +21,7 @@ func NewPresentation(service *services.Service, cleanUp func()) {
 	gin.SetMode(config.GetConfig().GinMode)
 
 	r := ginx.NewGin(ginx.GinConfig{
-		UseOtel: false,
+		UseOtel: config.GetConfig().Otel.Enabled,
 		AppName: config.GetConfig().AppName,
 	})
 

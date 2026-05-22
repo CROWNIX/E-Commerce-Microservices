@@ -1,0 +1,2 @@
+{"time":"2026-05-18T19:21:10.2539904+07:00","level":"ERROR","msg":"failed to shutdown meter provider","error":"failed to upload metrics: rpc error: code = Unimplemented desc = unknown service opentelemetry.proto.collector.metrics.v1.MetricsService"}
+{"time":"2026-05-18T19:21:10.2596066+07:00","level":"ERROR","msg":"failed to shutdown meter exporter","error":"gRPC exporter is shutdown"}

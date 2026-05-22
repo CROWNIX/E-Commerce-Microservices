@@ -27,6 +27,16 @@ help:
 	@echo "  $(COLOR_GREEN)make proto-gen-auth$(COLOR_RESET)     - Generate auth service proto"
 	@echo "  $(COLOR_GREEN)make proto-clean$(COLOR_RESET)        - Clean generated files"
 	@echo "  $(COLOR_GREEN)make proto-install$(COLOR_RESET)      - Install required tools"
+	@echo "  $(COLOR_GREEN)make observability-up$(COLOR_RESET)   - Start Jaeger + OTLP Collector (Podman)"
+	@echo "  $(COLOR_GREEN)make observability-down$(COLOR_RESET) - Stop observability stack"
+
+.PHONY: observability-up
+observability-up:
+	cd deploy/observability && podman compose up -d
+
+.PHONY: observability-down
+observability-down:
+	cd deploy/observability && podman compose down
 
 # Install required tools
 .PHONY: proto-install

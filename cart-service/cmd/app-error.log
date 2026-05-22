@@ -1,0 +1,6 @@
+{"time":"2026-05-18T19:14:49.339303+07:00","level":"ERROR","msg":"failed to shutdown meter provider","error":"failed to upload metrics: rpc error: code = Unimplemented desc = unknown service opentelemetry.proto.collector.metrics.v1.MetricsService"}
+{"time":"2026-05-18T19:14:49.34056+07:00","level":"ERROR","msg":"failed to shutdown meter exporter","error":"gRPC exporter is shutdown"}
+{"time":"2026-05-18T19:21:10.6130543+07:00","level":"ERROR","msg":"failed to shutdown meter provider","error":"failed to upload metrics: rpc error: code = Unimplemented desc = unknown service opentelemetry.proto.collector.metrics.v1.MetricsService"}
+{"time":"2026-05-18T19:21:10.6152611+07:00","level":"ERROR","msg":"failed to shutdown meter exporter","error":"gRPC exporter is shutdown"}
+{"time":"2026-05-18T22:07:36.3932964+07:00","level":"ERROR","msg":"failed to shutdown meter provider","error":"failed to upload metrics: rpc error: code = Unimplemented desc = unknown service opentelemetry.proto.collector.metrics.v1.MetricsService"}
+{"time":"2026-05-18T22:07:36.3967486+07:00","level":"ERROR","msg":"failed to shutdown meter exporter","error":"gRPC exporter is shutdown"}
